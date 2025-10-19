@@ -99,6 +99,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ReactMarkdown from "react-markdown";
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -179,7 +180,7 @@ function App() {
                 style={{ maxWidth: "75%" }}
               >
                 <strong>{msg.role === "user" ? "You" : "Bot"}:</strong>{" "}
-                {msg.content}
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
               </div>
             </div>
           ))}
