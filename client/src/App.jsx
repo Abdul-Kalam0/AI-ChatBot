@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactMarkdown from "react-markdown";
+import logoBg from "./assets/AI ChatBot Logo on Blue Background.png"; // ✅ Your logo path
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -12,11 +13,7 @@ function App() {
     const text = input.trim();
     if (!text) return;
 
-    const userMsg = {
-      role: "user",
-      content: text,
-      time: new Date().toISOString(),
-    };
+    const userMsg = { role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
@@ -25,27 +22,23 @@ function App() {
       const response = await axios.post(
         "https://ai-chat-bot-001.vercel.app/api/chat",
         { message: text },
-        {
-          headers: { "Content-Type": "application/json" },
-          timeout: 30000,
-        }
+        { headers: { "Content-Type": "application/json" }, timeout: 30000 }
       );
 
       const botReply =
-        response.data?.chat?.botMessage || "🤖 Sorry, I didn’t catch that.";
-
+        response.data?.chat?.botMessage ||
+        "🤖 Sorry, I didn’t catch that. Please try again.";
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: botReply },
       ]);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           content:
-            "⚠️ Oops! Something went wrong. Please check your internet or backend.",
+            "⚠️ Something went wrong. Please check your connection or backend.",
         },
       ]);
     } finally {
@@ -64,8 +57,12 @@ function App() {
     <div
       className="min-vh-100 d-flex align-items-center justify-content-center"
       style={{
-        background: "linear-gradient(135deg, #74ebd5 0%, #9face6 100%)",
+        backgroundImage: `linear-gradient(rgba(5, 10, 30, 0.85), rgba(5, 10, 30, 0.9)), url(${logoBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         fontFamily: "'Poppins', sans-serif",
+        color: "#fff",
       }}
     >
       <div
@@ -74,22 +71,23 @@ function App() {
           width: "95%",
           maxWidth: "550px",
           borderRadius: "20px",
-          backdropFilter: "blur(12px)",
-          background: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(15px)",
+          background: "rgba(255, 255, 255, 0.15)",
+          color: "#fff",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
         }}
       >
         <div
-          className="card-header text-center fw-bold fs-4 py-3"
+          className="card-header text-center fw-bold fs-4 py-3 border-0"
           style={{
-            background: "linear-gradient(90deg, #007bff, #00c6ff, #007bff)",
+            background: "linear-gradient(90deg, #00c6ff, #0072ff, #00c6ff)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            borderBottom: "none",
           }}
         >
           🤖 AI ChatBot
           <p className="text-muted fs-6 mt-1 mb-0">
-            Powered by Google Gemini AI
+            Smart Conversations, Instantly
           </p>
         </div>
 
@@ -97,13 +95,13 @@ function App() {
           className="card-body overflow-auto"
           style={{
             height: "60vh",
-            backgroundColor: "rgba(255,255,255,0.5)",
+            backgroundColor: "rgba(255,255,255,0.05)",
             borderRadius: "10px",
           }}
         >
           {messages.length === 0 && (
-            <p className="text-center text-muted mt-5">
-              👋 Hello! Ask me anything to get started.
+            <p className="text-center text-secondary mt-5">
+              👋 Hello there! Type a message to start chatting.
             </p>
           )}
 
@@ -124,6 +122,12 @@ function App() {
                 }`}
                 style={{
                   maxWidth: "75%",
+                  background:
+                    msg.role === "user"
+                      ? "linear-gradient(135deg, #007bff, #00c6ff)"
+                      : "rgba(255,255,255,0.85)",
+                  color: msg.role === "user" ? "#fff" : "#000",
+                  border: msg.role === "assistant" ? "1px solid #eee" : "none",
                   transition: "all 0.3s ease-in-out",
                 }}
               >
@@ -133,18 +137,9 @@ function App() {
           ))}
 
           {loading && (
-            <div className="d-flex justify-content-start mb-3">
-              <div
-                className="p-3 rounded-4 bg-light text-secondary d-flex align-items-center"
-                style={{ maxWidth: "60%" }}
-              >
-                <span className="me-2">Bot is typing</span>
-                <div className="typing-dots">
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                </div>
-              </div>
+            <div className="text-center text-muted mt-3">
+              <span>Bot is thinking</span>
+              <span className="dots">...</span>
             </div>
           )}
         </div>
@@ -160,8 +155,8 @@ function App() {
               onKeyDown={handleKeyDown}
               disabled={loading}
               style={{
-                background: "rgba(255,255,255,0.9)",
-                border: "1px solid #ccc",
+                background: "rgba(255,255,255,0.85)",
+                border: "none",
               }}
             />
             <button
@@ -172,35 +167,23 @@ function App() {
               {loading ? "..." : "Send"}
             </button>
           </div>
-          <p className="text-center text-muted mt-3 mb-1 fs-6">
-            💬 Chat history resets when you refresh
+          <p className="text-center text-primary mt-3 mb-1 fs-6">
+            💬 Chat resets when refreshed
           </p>
         </div>
       </div>
 
-      {/* Inline typing animation style */}
       <style>{`
-        .typing-dots {
-          display: inline-flex;
-          align-items: center;
+        .dots {
+          display: inline-block;
+          margin-left: 4px;
+          animation: dots 1.5s infinite;
         }
-        .typing-dots .dot {
-          width: 6px;
-          height: 6px;
-          margin: 0 2px;
-          background-color: #aaa;
-          border-radius: 50%;
-          animation: blink 1.4s infinite both;
-        }
-        .typing-dots .dot:nth-child(2) {
-          animation-delay: 0.2s;
-        }
-        .typing-dots .dot:nth-child(3) {
-          animation-delay: 0.4s;
-        }
-        @keyframes blink {
-          0%, 80%, 100% { opacity: 0; }
-          40% { opacity: 1; }
+        @keyframes dots {
+          0%, 20% { content: ''; }
+          40% { content: '.'; }
+          60% { content: '..'; }
+          80%, 100% { content: '...'; }
         }
       `}</style>
     </div>
