@@ -100,7 +100,15 @@ function App() {
           }}
         >
           {messages.length === 0 && (
-            <p className="text-center text-secondary mt-5">
+            <p
+              className="text-center mt-5"
+              style={{
+                color: "#00c6ff",
+                textShadow: "0 0 8px rgba(0,198,255,0.6)",
+                fontWeight: "500",
+                letterSpacing: "0.5px",
+              }}
+            >
               👋 Hello there! Type a message to start chatting.
             </p>
           )}
@@ -137,8 +145,15 @@ function App() {
           ))}
 
           {loading && (
-            <div className="text-center text-muted mt-3">
-              <span>Bot is thinking</span>
+            <div
+              className="text-center mt-3"
+              style={{
+                color: "#00c6ff",
+                textShadow: "0 0 8px rgba(0,198,255,0.6)",
+                fontStyle: "italic",
+              }}
+            >
+              <span>🤖 Bot is thinking</span>
               <span className="dots">...</span>
             </div>
           )}
