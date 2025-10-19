@@ -120,7 +120,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/chat",
+        "https://ai-chat-bot-001.vercel.app/api/chat",
         { message: text },
         {
           headers: { "Content-Type": "application/json" },
