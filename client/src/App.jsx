@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactMarkdown from "react-markdown";
-import logoBg from "./assets/AI ChatBot Logo on Blue Background.png"; // ✅ Your logo path
+import logoBg from "./assets/AI ChatBot Logo on Blue Background.png";
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -157,6 +167,9 @@ function App() {
               <span className="dots">...</span>
             </div>
           )}
+
+          {/* This div ensures scrolling to bottom */}
+          <div ref={messagesEndRef} />
         </div>
 
         <div className="card-footer bg-transparent border-0">
