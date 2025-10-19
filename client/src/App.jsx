@@ -1,101 +1,3 @@
-// import { useState } from "react";
-// import axios from "axios";
-// import "bootstrap/dist/css/bootstrap.min.css";
-
-// function App() {
-//   const [messages, setMessages] = useState([]);
-//   const [input, setInput] = useState("");
-//   const [loading, setLoading] = useState(false);
-
-//   const sendMessage = async () => {
-//     const text = input.trim();
-//     if (!text) return;
-
-//     // Add user message immediately
-//     const userMsg = {
-//       role: "user",
-//       content: text,
-//       time: new Date().toISOString(),
-//     };
-//     setMessages((prev) => [...prev, userMsg]);
-//     setInput("");
-//     setLoading(true);
-
-//     try {
-//       const response = await axios.post(
-//         "http://localhost:3000/api/chat",
-//         { message: text },
-//         {
-//           headers: { "Content-Type": "application/json" },
-//           timeout: 30000,
-//         }
-//       );
-
-//       // Extract bot reply
-//       const botReply =
-//         response.data?.chat?.botMessage || "No reply received from server.";
-
-//       // Add bot message
-//       setMessages((prev) => [
-//         ...prev,
-//         { role: "assistant", content: botReply },
-//       ]);
-//     } catch (error) {
-//       console.error("Error:", error);
-//       setMessages((prev) => [
-//         ...prev,
-//         {
-//           role: "assistant",
-//           content:
-//             "⚠️ Something went wrong. Please check your connection or backend.",
-//         },
-//       ]);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleKeyDown = (e) => {
-//     if (e.key === "Enter" && !e.shiftKey) {
-//       e.preventDefault();
-//       sendMessage();
-//     }
-//   };
-
-//   return (
-//     <>
-//       <h1>AI ChatBot</h1>
-
-//       {/* Display chat messages */}
-//       <div>
-//         {messages.map((msg, index) => (
-//           <p key={index}>
-//             <strong>{msg.role === "user" ? "You" : "Bot"}:</strong>{" "}
-//             {msg.content}
-//           </p>
-//         ))}
-//         {loading && <p>Bot is typing...</p>}
-//       </div>
-
-//       {/* Input and send button */}
-//       <div>
-//         <input
-//           type="text"
-//           placeholder="Type your message and press Enter..."
-//           value={input}
-//           onChange={(e) => setInput(e.target.value)}
-//           onKeyDown={handleKeyDown}
-//         />
-//         <button onClick={sendMessage} disabled={loading}>
-//           Send
-//         </button>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default App;
-
 import { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -130,7 +32,7 @@ function App() {
       );
 
       const botReply =
-        response.data?.chat?.botMessage || "No reply received from server.";
+        response.data?.chat?.botMessage || "🤖 Sorry, I didn’t catch that.";
 
       setMessages((prev) => [
         ...prev,
@@ -143,7 +45,7 @@ function App() {
         {
           role: "assistant",
           content:
-            "⚠️ Something went wrong. Please check your connection or backend.",
+            "⚠️ Oops! Something went wrong. Please check your internet or backend.",
         },
       ]);
     } finally {
@@ -159,61 +61,148 @@ function App() {
   };
 
   return (
-    <div className="container py-4">
-      <h1 className="text-center mb-4 text-primary">🤖 AI ChatBot</h1>
+    <div
+      className="min-vh-100 d-flex align-items-center justify-content-center"
+      style={{
+        background: "linear-gradient(135deg, #74ebd5 0%, #9face6 100%)",
+        fontFamily: "'Poppins', sans-serif",
+      }}
+    >
+      <div
+        className="card shadow-lg border-0"
+        style={{
+          width: "95%",
+          maxWidth: "550px",
+          borderRadius: "20px",
+          backdropFilter: "blur(12px)",
+          background: "rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        <div
+          className="card-header text-center fw-bold fs-4 py-3"
+          style={{
+            background: "linear-gradient(90deg, #007bff, #00c6ff, #007bff)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            borderBottom: "none",
+          }}
+        >
+          🤖 AI ChatBot
+          <p className="text-muted fs-6 mt-1 mb-0">
+            Powered by Google Gemini AI
+          </p>
+        </div>
 
-      <div className="card">
-        <div className="card-body overflow-auto" style={{ height: "60vh" }}>
+        <div
+          className="card-body overflow-auto"
+          style={{
+            height: "60vh",
+            backgroundColor: "rgba(255,255,255,0.5)",
+            borderRadius: "10px",
+          }}
+        >
+          {messages.length === 0 && (
+            <p className="text-center text-muted mt-5">
+              👋 Hello! Ask me anything to get started.
+            </p>
+          )}
+
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`d-flex mb-2 ${
+              className={`d-flex mb-3 ${
                 msg.role === "user"
                   ? "justify-content-end"
                   : "justify-content-start"
               }`}
             >
               <div
-                className={`p-2 rounded ${
-                  msg.role === "user" ? "bg-primary text-white" : "bg-light"
+                className={`p-3 rounded-4 shadow-sm ${
+                  msg.role === "user"
+                    ? "bg-primary text-white"
+                    : "bg-light text-dark"
                 }`}
-                style={{ maxWidth: "75%" }}
+                style={{
+                  maxWidth: "75%",
+                  transition: "all 0.3s ease-in-out",
+                }}
               >
-                <strong>{msg.role === "user" ? "You" : "Bot"}:</strong>{" "}
                 <ReactMarkdown>{msg.content}</ReactMarkdown>
               </div>
             </div>
           ))}
+
           {loading && (
-            <p className="text-muted text-center">Bot is typing...</p>
+            <div className="d-flex justify-content-start mb-3">
+              <div
+                className="p-3 rounded-4 bg-light text-secondary d-flex align-items-center"
+                style={{ maxWidth: "60%" }}
+              >
+                <span className="me-2">Bot is typing</span>
+                <div className="typing-dots">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                </div>
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Input */}
-        <div className="card-footer">
+        <div className="card-footer bg-transparent border-0">
           <div className="input-group">
             <input
               type="text"
-              className="form-control"
-              placeholder="Type your message and press Enter..."
+              className="form-control form-control-lg rounded-start-4"
+              placeholder="Type your message..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              disabled={loading}
+              style={{
+                background: "rgba(255,255,255,0.9)",
+                border: "1px solid #ccc",
+              }}
             />
             <button
-              className="btn btn-primary"
+              className="btn btn-primary rounded-end-4 px-4"
               onClick={sendMessage}
               disabled={loading}
             >
-              Send
+              {loading ? "..." : "Send"}
             </button>
           </div>
+          <p className="text-center text-muted mt-3 mb-1 fs-6">
+            💬 Chat history resets when you refresh
+          </p>
         </div>
       </div>
 
-      <p className="text-center text-muted mt-2">
-        (Chat history will disappear when you leave or refresh)
-      </p>
+      {/* Inline typing animation style */}
+      <style>{`
+        .typing-dots {
+          display: inline-flex;
+          align-items: center;
+        }
+        .typing-dots .dot {
+          width: 6px;
+          height: 6px;
+          margin: 0 2px;
+          background-color: #aaa;
+          border-radius: 50%;
+          animation: blink 1.4s infinite both;
+        }
+        .typing-dots .dot:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+        .typing-dots .dot:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+        @keyframes blink {
+          0%, 80%, 100% { opacity: 0; }
+          40% { opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
