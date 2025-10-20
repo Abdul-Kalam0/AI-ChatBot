@@ -163,7 +163,7 @@ function App() {
                 fontStyle: "italic",
               }}
             >
-              <span>🤖 Bot is thinking</span>
+              <span>🤖 AI is thinking</span>
               <span className="dots">...</span>
             </div>
           )}
