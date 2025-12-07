@@ -8,17 +8,33 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [controller, setController] = useState(null);
   const messagesEndRef = useRef(null);
 
+  // Auto scroll to bottom when messages or loading state changes
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  useEffect(scrollToBottom, [messages, loading]);
 
+  // ✅ Fetch chat history from MongoDB via session
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, loading]);
+    const fetchHistory = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/chat/history", {
+          withCredentials: true,
+        });
+        if (res.data.success && Array.isArray(res.data.chats)) {
+          setMessages(res.data.chats);
+        }
+      } catch (err) {
+        console.error("Error fetching chat history:", err);
+      }
+    };
+    fetchHistory();
+  }, []);
 
+  // ✅ Send new message
   const sendMessage = async () => {
     const text = input.trim();
     if (!text) return;
@@ -28,34 +44,61 @@ function App() {
     setInput("");
     setLoading(true);
 
+    const abortController = new AbortController();
+    setController(abortController);
+
     try {
       const response = await axios.post(
-        "https://ai-chat-bot-001.vercel.app/api/chat",
+        "http://localhost:3000/api/chat",
         { message: text },
-        { headers: { "Content-Type": "application/json" }, timeout: 30000 }
+        {
+          headers: { "Content-Type": "application/json" },
+          signal: abortController.signal,
+          timeout: 60000,
+          withCredentials: true, // keep session cookie
+        }
       );
 
       const botReply =
         response.data?.chat?.botMessage ||
         "🤖 Sorry, I didn’t catch that. Please try again.";
+
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: botReply },
       ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "⚠️ Something went wrong. Please check your connection or backend.",
-        },
-      ]);
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "⚠️ Reply canceled by user." },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              "⚠️ Something went wrong. Please check your connection or backend.",
+          },
+        ]);
+      }
     } finally {
       setLoading(false);
+      setController(null);
     }
   };
 
+  // ✅ Cancel reply
+  const cancelReply = () => {
+    if (controller) {
+      controller.abort();
+      setLoading(false);
+      setController(null);
+    }
+  };
+
+  // ✅ Handle enter key
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -87,6 +130,7 @@ function App() {
           boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
         }}
       >
+        {/* Header */}
         <div
           className="card-header text-center fw-bold fs-4 py-3 border-0"
           style={{
@@ -101,6 +145,7 @@ function App() {
           </p>
         </div>
 
+        {/* Chat Area */}
         <div
           className="card-body overflow-auto"
           style={{
@@ -168,10 +213,10 @@ function App() {
             </div>
           )}
 
-          {/* This div ensures scrolling to bottom */}
           <div ref={messagesEndRef} />
         </div>
 
+        {/* Input + Stop/Send Buttons */}
         <div className="card-footer bg-transparent border-0">
           <div className="input-group">
             <input
@@ -187,20 +232,26 @@ function App() {
                 border: "none",
               }}
             />
-            <button
-              className="btn btn-primary rounded-end-4 px-4"
-              onClick={sendMessage}
-              disabled={loading}
-            >
-              {loading ? "..." : "Send"}
-            </button>
+            {loading ? (
+              <button
+                className="btn btn-danger rounded-end-4 px-4"
+                onClick={cancelReply}
+              >
+                Stop
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary rounded-end-4 px-4"
+                onClick={sendMessage}
+              >
+                Send
+              </button>
+            )}
           </div>
-          <p className="text-center text-primary mt-3 mb-1 fs-6">
-            💬 Chat resets when refreshed
-          </p>
         </div>
       </div>
 
+      {/* Typing animation */}
       <style>{`
         .dots {
           display: inline-block;

@@ -3,7 +3,21 @@
 A full-stack **AI ChatBot** built using **React (Vite)** for the frontend and **Node.js + Express + MongoDB** for the backend.
 The chatbot uses **Google Gemini (Generative AI)** to generate intelligent, contextual responses to user messages.
 
-🌐 **Live Demo:** [https://ai-chatbot001.vercel.app](https://ai-chatbot001.vercel.app)
+---
+
+## 🌍 Live Deployment
+
+| Service     | Link                             |
+| ----------- | -------------------------------- |
+| 🖥️ Frontend | https://ai-chatbot001.vercel.app |
+
+---
+
+## 📸 UI Preview
+
+| Home                                | Live                                   |
+| ----------------------------------- | -------------------------------------- |
+| ![Home](client/src/assets/Home.jpg) | ![Live](client/src/assets/working.jpg) |
 
 ---
 
@@ -11,19 +25,19 @@ The chatbot uses **Google Gemini (Generative AI)** to generate intelligent, cont
 
 ### 🧠 Backend (Server)
 
-* Node.js (ESM)
-* Express.js
-* MongoDB + Mongoose
-* Google Generative AI (`@google/generative-ai`)
-* dotenv
-* CORS
+- Node.js (ESM)
+- Express.js
+- MongoDB + Mongoose
+- Google Generative AI (`@google/generative-ai`)
+- dotenv
+- CORS
 
 ### 💬 Frontend (Client)
 
-* React (Vite)
-* Axios
-* Bootstrap 5
-* React Markdown (for rendering AI responses)
+- React (Vite)
+- Axios
+- Bootstrap 5
+- React Markdown (for rendering AI responses)
 
 ---
 
@@ -183,9 +197,9 @@ ai-chatbot/
 
 ## 🚀 Deployment
 
-* **Frontend:** Deployed on [Vercel](https://vercel.com/)
-* **Backend:** Deployed on [Render / Railway / Vercel Functions]
-* **Database:** MongoDB Atlas
+- **Frontend:** Deployed on [Vercel](https://vercel.com/)
+- **Backend:** Deployed on [Render / Railway / Vercel Functions]
+- **Database:** MongoDB Atlas
 
 ---
 
@@ -209,10 +223,10 @@ npm run preview # Preview production build
 
 ## 💡 Future Enhancements
 
-* ✅ Add user authentication (JWT)
-* ✅ Implement chat history with pagination
-* ✅ Add multi-model support (Gemini / OpenAI)
-* ✅ Dark mode UI
+- ✅ Add user authentication (JWT)
+- ✅ Implement chat history with pagination
+- ✅ Add multi-model support (Gemini / OpenAI)
+- ✅ Dark mode UI
 
 ---
 
@@ -226,3 +240,9 @@ npm run preview # Preview production build
 ## 📄 License
 
 This project is licensed under the **MIT License** — feel free to use and modify it.
+
+---
+
+### ⭐ If you like this project, consider giving a **GitHub Star**!
+
+Made with ❤️ by Abdul Kalam

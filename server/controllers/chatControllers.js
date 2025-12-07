@@ -1,102 +1,87 @@
-// import OpenAIApi from "openai";
-// import chatModel from "../models/chatModel.js";
-// import dotenv from "dotenv";
-// dotenv.config();
-
-// const openai = new OpenAIApi({
-//   apikey: process.env.OPENAI_API_KEY,
-// });
-
-// export const handleChats = async (req, res) => {
-//   const { message } = req.body;
-//   try {
-//     //send user message to OPENAI
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-3.5-turbo",
-//       messages: [{ role: "user", content: message }],
-//     });
-
-//     const botReply = response.data.choices[0].message.content;
-
-//     const chat = new chatModel({ userMessage: message, botMessage: botReply });
-//     await chat.save();
-
-// res
-//   .status(201)
-//   .json({ success: true, message: "Chat stored successfully", chat });
-//   } catch (error) {
-//     if (error.code === "insufficient_quota") {
-//       return res.status(429).json({
-//         error:
-//           "Your OpenAI API quota has been exceeded. Please upgrade your plan or try again later.",
-//       });
-//     }
-//     res.status(500).json({ success: false, error: "Something went wrong" });
-//   }
-// };
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Chat from "../models/chatModel.js";
 import dotenv from "dotenv";
 
-// Load environment variables
 dotenv.config();
 
-// Initialize the Google Generative AI client with the API key
-// The key is loaded from .env file (process.env.GEMINI_API_KEY)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-/**
- * Handles incoming chat messages, sends them to the Gemini model,
- * and saves both the user message and bot reply to the database.
- * @param {object} req - Express request object.
- * @param {object} res - Express response object.
- */
 export const handleChat = async (req, res) => {
-  // Extract the user's message from the request body
   const { message } = req.body;
-
-  // Basic validation: ensure the user sent a message
-  if (!message) {
-    return res.status(400).json({ error: "Message content is required." });
-  }
+  if (!message?.trim())
+    return res.status(400).json({ error: "Message is required." });
 
   try {
-    // Use gemini-2.5-flash for fast and high-quality chat responses
+    if (!req.session.sessionId) {
+      req.session.sessionId =
+        Date.now().toString() + Math.random().toString(36).slice(2, 8);
+      req.session.history = [];
+    }
+    const sessionId = req.session.sessionId;
+
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const result = await model.generateContent({ prompt: message });
 
-    // Generate content from the user's message
-    const result = await model.generateContent(message);
+    // Gemini API response fix
+    const botReply =
+      result?.candidates?.[0]?.content || "I'm sorry, I couldn't process that.";
 
-    // Extract the plain text response from the model
-    // Using .trim() ensures no leading/trailing whitespace
-    const botReply = result.response.text();
-
-    // 💾 Save the chat interaction to the MongoDB database using the Chat model
-    const chat = new Chat({ userMessage: message, botMessage: botReply });
+    // Save in MongoDB
+    const chat = new Chat({
+      sessionId,
+      userMessage: message,
+      botMessage: botReply,
+    });
     await chat.save();
 
-    // Send a successful response back to the client
-    res.status(201).json({
+    // Save in session
+    req.session.history.push({
+      user: message,
+      bot: botReply,
+      timestamp: new Date(),
+    });
+    if (req.session.history.length > 10)
+      req.session.history = req.session.history.slice(-10);
+    await req.session.save();
+
+    res.status(200).json({
       success: true,
-      message: "Chat stored successfully and response generated",
-      chat,
+      reply: botReply,
+      sessionId,
+      history: req.session.history,
     });
-  } catch (error) {
-    // Log the detailed error for debugging
-    console.error("Gemini API or Database Error:", error.message);
+  } catch (err) {
+    console.error("❌ Error in handleChat:", err);
+    if (err.status === 429)
+      return res.status(429).json({ error: "Gemini API rate limit exceeded." });
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
 
-    // Handle potential rate limit errors (429) from the API
-    if (error.status === 429) {
-      return res.status(429).json({
-        error: "Gemini API rate limit exceeded. Please try again later.",
-      });
-    }
+export const getSessionHistory = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    sessionId: req.session.sessionId || null,
+    chats: req.session.history || [],
+  });
+};
 
-    // Generic error response
-    res.status(500).json({
-      success: false,
-      error: "An unexpected error occurred while processing the chat.",
+export const clearSession = async (req, res) => {
+  try {
+    if (!req.session.sessionId)
+      return res.status(400).json({ error: "No active session found." });
+
+    const sid = req.session.sessionId;
+    await Chat.deleteMany({ sessionId: sid });
+
+    req.session.destroy((err) => {
+      if (err)
+        return res.status(500).json({ error: "Failed to clear session." });
+      res.clearCookie("connect.sid");
+      res.json({ success: true, message: "Session cleared successfully." });
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error while clearing session." });
   }
 };
