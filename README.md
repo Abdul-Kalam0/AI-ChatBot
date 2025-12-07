@@ -15,9 +15,19 @@ The chatbot uses **Google Gemini (Generative AI)** to generate intelligent, cont
 
 ## 📸 UI Preview
 
-| Home                                | Live                                   |
-| ----------------------------------- | -------------------------------------- |
+| Home                                 | Live                                   |
+| ------------------------------------ | -------------------------------------- |
 | ![Home](client/src/assets/Home1.jpg) | ![Live](client/src/assets/working.jpg) |
+
+---
+
+## 🧩 Features
+
+✅ Real-time AI chat using **Google Gemini API**
+✅ Message persistence with **MongoDB**
+✅ Clean and responsive UI (Bootstrap 5)
+✅ Markdown rendering for formatted AI responses
+✅ Error handling for API rate limits and server failures
 
 ---
 
@@ -155,16 +165,6 @@ ai-chatbot/
   }
 }
 ```
-
----
-
-## 🧩 Features
-
-✅ Real-time AI chat using **Google Gemini API**
-✅ Message persistence with **MongoDB**
-✅ Clean and responsive UI (Bootstrap 5)
-✅ Markdown rendering for formatted AI responses
-✅ Error handling for API rate limits and server failures
 
 ---
 
