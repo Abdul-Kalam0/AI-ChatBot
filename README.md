@@ -17,7 +17,7 @@ The chatbot uses **Google Gemini (Generative AI)** to generate intelligent, cont
 
 | Home                                | Live                                   |
 | ----------------------------------- | -------------------------------------- |
-| ![Home](client/src/assets/Home.jpg) | ![Live](client/src/assets/working.jpg) |
+| ![Home](client/src/assets/Home1.jpg) | ![Live](client/src/assets/working.jpg) |
 
 ---
 
