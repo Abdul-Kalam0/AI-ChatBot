@@ -4,12 +4,68 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// export const handleChat = async (req, res) => {
+//   const { message } = req.body;
+//   if (!message?.trim())
+//     return res.status(400).json({ error: "Message is required." });
+
+//   try {
+//     if (!req.session.sessionId) {
+//       req.session.sessionId =
+//         Date.now().toString() + Math.random().toString(36).slice(2, 8);
+//       req.session.history = [];
+//     }
+//     const sessionId = req.session.sessionId;
+
+//     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+//     const result = await model.generateContent({ prompt: message });
+
+//     // Gemini API response fix
+//     const botReply =
+//       result?.candidates?.[0]?.content || "I'm sorry, I couldn't process that.";
+
+//     // Save in MongoDB
+//     const chat = new Chat({
+//       sessionId,
+//       userMessage: message,
+//       botMessage: botReply,
+//     });
+//     await chat.save();
+
+//     // Save in session
+//     req.session.history.push({
+//       user: message,
+//       bot: botReply,
+//       timestamp: new Date(),
+//     });
+//     if (req.session.history.length > 10)
+//       req.session.history = req.session.history.slice(-10);
+//     await req.session.save();
+
+//     res.status(200).json({
+//       success: true,
+//       reply: botReply,
+//       sessionId,
+//       history: req.session.history,
+//     });
+//   } catch (err) {
+//     console.error("❌ Error in handleChat:", err);
+//     if (err.status === 429)
+//       return res.status(429).json({ error: "Gemini API rate limit exceeded." });
+//     res.status(500).json({ error: "Internal server error." });
+//   }
+// };
+
+import axios from "axios";
 
 export const handleChat = async (req, res) => {
   const { message } = req.body;
-  if (!message?.trim())
+
+  if (!message?.trim()) {
     return res.status(400).json({ error: "Message is required." });
+  }
 
   try {
     if (!req.session.sessionId) {
@@ -17,31 +73,55 @@ export const handleChat = async (req, res) => {
         Date.now().toString() + Math.random().toString(36).slice(2, 8);
       req.session.history = [];
     }
+
     const sessionId = req.session.sessionId;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    const result = await model.generateContent({ prompt: message });
+    // ✅ full conversation context
+    const messages = req.session.history.flatMap((msg) => [
+      { role: "user", content: msg.user },
+      { role: "assistant", content: msg.bot },
+    ]);
 
-    // Gemini API response fix
+    messages.push({ role: "user", content: message });
+
+    const response = await axios.post(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        model: "llama-3.3-70b-versatile", // ✅ correct Groq model
+        messages,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
     const botReply =
-      result?.candidates?.[0]?.content || "I'm sorry, I couldn't process that.";
+      response.data?.choices?.[0]?.message?.content ||
+      "I'm sorry, I couldn't process that.";
 
-    // Save in MongoDB
+    // Save DB
     const chat = new Chat({
       sessionId,
       userMessage: message,
       botMessage: botReply,
     });
+
     await chat.save();
 
-    // Save in session
+    // Save session
     req.session.history.push({
       user: message,
       bot: botReply,
       timestamp: new Date(),
     });
-    if (req.session.history.length > 10)
+
+    if (req.session.history.length > 10) {
       req.session.history = req.session.history.slice(-10);
+    }
+
     await req.session.save();
 
     res.status(200).json({
@@ -51,10 +131,11 @@ export const handleChat = async (req, res) => {
       history: req.session.history,
     });
   } catch (err) {
-    console.error("❌ Error in handleChat:", err);
-    if (err.status === 429)
-      return res.status(429).json({ error: "Gemini API rate limit exceeded." });
-    res.status(500).json({ error: "Internal server error." });
+    console.error("❌ Groq Error:", err.response?.data || err.message);
+
+    res.status(500).json({
+      error: "Groq API failed",
+    });
   }
 };
 
