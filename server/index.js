@@ -42,12 +42,11 @@ app.use(
 // Routes
 app.use("/api", chatRoutes);
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "AI Chatbot backend running ✅",
-    error: error.message,
-  });
-});
+// app.get("/", (req, res) => {
+//   res.json({
+//     success: true,
+//     message: "AI Chatbot backend running ✅",
+//   });
+// });
 
 export default app;
