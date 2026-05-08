@@ -42,9 +42,7 @@ app.use(
 app.use("/api", chatRoutes);
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "AI Chatbot backend running ✅",
-  });
+  res.json("PrepAI is backend running✅");
 });
 
 export default app;
