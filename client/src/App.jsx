@@ -23,7 +23,7 @@ function App() {
     const fetchHistory = async () => {
       try {
         const res = await axios.get(
-          "https://ai-chatbot-001-backend.vercel.app/api/chat/history",
+          "https://prepai-001-backend.vercel.app/api/chat/history",
           {
             withCredentials: true,
           },
@@ -53,7 +53,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "https://ai-chatbot-001-backend.vercel.app",
+        "https://prepai-001-backend.vercel.app",
         { message: text },
         {
           headers: { "Content-Type": "application/json" },
