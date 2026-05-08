@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,9 +22,12 @@ function App() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/chat/history", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "https://ai-chatbot-001-backend.vercel.app/api/chat/history",
+          {
+            withCredentials: true,
+          },
+        );
         if (res.data.success && Array.isArray(res.data.chats)) {
           setMessages(res.data.chats);
         }
@@ -49,14 +53,14 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/chat",
+        "https://ai-chatbot-001-backend.vercel.app",
         { message: text },
         {
           headers: { "Content-Type": "application/json" },
           signal: abortController.signal,
           timeout: 60000,
           withCredentials: true, // keep session cookie
-        }
+        },
       );
 
       const botReply =
