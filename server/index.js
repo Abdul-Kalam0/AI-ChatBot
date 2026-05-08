@@ -15,6 +15,7 @@ app.use(express.json());
 // CORS setup
 app.use(
   cors({
+    origin: "https://prepai-001.vercel.app",
     credentials: true,
   }),
 );
