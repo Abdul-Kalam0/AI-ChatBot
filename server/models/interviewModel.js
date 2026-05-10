@@ -17,7 +17,7 @@ const interviewSchema = new mongoose.Schema(
 
     totalQuestion: {
       type: Number,
-      default: 10,
+      default: 11,
     },
 
     currentQuestion: {

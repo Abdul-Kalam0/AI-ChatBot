@@ -29,11 +29,16 @@ const Interview = () => {
     if (completed) {
       const timer = setTimeout(() => {
         navigate("/");
-      }, 10000);
+        navigate(`/feedback/${interviewId}`, {
+          state: {
+            interviewId,
+          },
+        });
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
-  }, [completed, navigate]);
+  }, [completed, navigate, interviewId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -274,7 +279,7 @@ const Interview = () => {
 
             {/* Redirect text */}
             <p className="text-zinc-500 text-sm mt-6">
-              Redirecting to home page in 10 seconds...
+              Redirecting to feedback page in 5 seconds...
             </p>
           </div>
         </div>

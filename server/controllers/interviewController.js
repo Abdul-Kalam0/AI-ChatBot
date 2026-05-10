@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Interview from "../models/interviewModel.js";
 import Message from "../models/messageModel.js";
 
@@ -91,7 +92,7 @@ export const answerQuestion = async (req, res) => {
       });
     }
 
-    // interview already completed
+    // already completed
     if (interview.completed) {
       return res.status(400).json({
         success: false,
@@ -110,40 +111,45 @@ export const answerQuestion = async (req, res) => {
       questionNumber: interview.currentQuestion,
     });
 
-    // fetch all interview messages
+    // get interview history
     const history = await Message.find({
       interviewId,
     }).sort({
       createdAt: 1,
     });
 
-    // convert DB messages to LLM format
+    // convert to AI format
     const formattedMessages = history.map((msg) => ({
       role: msg.role === "ai" ? "assistant" : "user",
 
       content: msg.content,
     }));
 
-    // generate AI reply
-    const aiReply = await generateAIResponse(
-      formattedMessages,
-      interview.techStack,
-      interview.difficulty,
-    );
-
-    // increment question count
+    // increment question number
     interview.currentQuestion += 1;
 
-    // save AI response
-    await Message.create({
-      interviewId,
+    let aiReply = "";
 
-      role: "ai",
+    // generate next question ONLY
+    // if interview not completed
+    if (interview.currentQuestion < interview.totalQuestion) {
+      aiReply = await generateAIResponse(
+        formattedMessages,
+        interview.techStack,
+        interview.difficulty,
+      );
 
-      content: aiReply,
+      // save AI response
+      await Message.create({
+        interviewId,
 
-      questionNumber: interview.currentQuestion,
-    });
+        role: "ai",
+
+        content: aiReply,
+
+        questionNumber: interview.currentQuestion,
+      });
+    }
 
     // ==========================================
     // INTERVIEW COMPLETION + FEEDBACK
@@ -151,6 +157,9 @@ export const answerQuestion = async (req, res) => {
     if (interview.currentQuestion >= interview.totalQuestion) {
       // mark completed
       interview.completed = true;
+
+      // completion message
+      aiReply = "🎉 Interview completed successfully!";
 
       // generate feedback
       const feedback = await generateInterviewFeedback(
@@ -196,4 +205,27 @@ export const answerQuestion = async (req, res) => {
       message: "Server Error",
     });
   }
+};
+
+export const feedbackSummary = async (req, res) => {
+  const { interviewId } = req.params;
+  try {
+    if (!mongoose.isValidObjectId(interviewId)) {
+      return res.status().json({
+        success: false,
+        message: "Invalid Interview ID",
+      });
+    }
+    const interview = await Interview.findById(interviewId);
+    if (!interview) {
+      return res.status(404).json({
+        success: false,
+        message: "No interview found",
+      });
+    }
+    res.status(200).json({
+      sucess: false,
+      data: interview,
+    });
+  } catch (error) {}
 };
