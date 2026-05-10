@@ -1,11 +1,9 @@
 import express from "express";
 import cors from "cors";
-import session from "express-session";
-import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
-import chatRoutes from "./routes/chatRoutes.js";
-
 dotenv.config();
+
+import interviewRoutes from "./routes/interviewRoutes.js";
 
 const app = express();
 
@@ -13,37 +11,14 @@ const app = express();
 app.use(express.json());
 
 // CORS setup
-app.use(
-  cors({
-    origin: "https://nextviva-001.vercel.app",
-    credentials: true,
-  }),
-);
-
-// MongoDB Session Store
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.DB_URI,
-      collectionName: "sessions",
-      ttl: 60 * 60 * 24, // 1 day
-    }),
-    cookie: {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 1000 * 60 * 30, // 30 minutes
-    },
-  }),
-);
+app.use(cors());
 
 // Routes
-app.use("/api", chatRoutes);
+app.use("/api/interview", interviewRoutes);
+
 
 app.get("/", (req, res) => {
-  res.send("<h1>PrepAI backend running✅</h1>");
+  res.send("<h1>InterviewMock backend running✅</h1>");
 });
 
 export default app;

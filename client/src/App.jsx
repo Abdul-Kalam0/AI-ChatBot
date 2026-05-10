@@ -53,7 +53,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "https://nextviva-001-backend.vercel.app",
+        "https://nextviva-001-backend.vercel.app/api/chat",
         { message: text },
         {
           headers: { "Content-Type": "application/json" },
