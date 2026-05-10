@@ -3,7 +3,11 @@ import Message from "../models/messageModel.js";
 
 import { generateAIResponse } from "../services/aiService.js";
 
+import { generateInterviewFeedback } from "../services/feedbackService.js";
+
+// ==========================================
 // START INTERVIEW
+// ==========================================
 export const startInterview = async (req, res) => {
   try {
     const { techStack, difficulty } = req.body;
@@ -34,11 +38,14 @@ export const startInterview = async (req, res) => {
       difficulty,
     );
 
-    // save AI message
+    // save AI question
     await Message.create({
       interviewId: interview._id,
+
       role: "ai",
+
       content: firstQuestion,
+
       questionNumber: 1,
     });
 
@@ -59,7 +66,9 @@ export const startInterview = async (req, res) => {
   }
 };
 
+// ==========================================
 // ANSWER QUESTION
+// ==========================================
 export const answerQuestion = async (req, res) => {
   try {
     const { interviewId, answer } = req.body;
@@ -93,19 +102,25 @@ export const answerQuestion = async (req, res) => {
     // save user answer
     await Message.create({
       interviewId,
+
       role: "user",
+
       content: answer,
+
       questionNumber: interview.currentQuestion,
     });
 
     // fetch all interview messages
     const history = await Message.find({
       interviewId,
-    }).sort({ createdAt: 1 });
+    }).sort({
+      createdAt: 1,
+    });
 
     // convert DB messages to LLM format
     const formattedMessages = history.map((msg) => ({
       role: msg.role === "ai" ? "assistant" : "user",
+
       content: msg.content,
     }));
 
@@ -122,14 +137,39 @@ export const answerQuestion = async (req, res) => {
     // save AI response
     await Message.create({
       interviewId,
+
       role: "ai",
+
       content: aiReply,
+
       questionNumber: interview.currentQuestion,
     });
 
-    // mark completed
+    // ==========================================
+    // INTERVIEW COMPLETION + FEEDBACK
+    // ==========================================
     if (interview.currentQuestion >= interview.totalQuestion) {
+      // mark completed
       interview.completed = true;
+
+      // generate feedback
+      const feedback = await generateInterviewFeedback(
+        formattedMessages,
+        interview.techStack,
+        interview.difficulty,
+      );
+
+      // save score
+      interview.score = feedback.score;
+
+      // save feedback
+      interview.feedback = {
+        strength: feedback.strengths,
+
+        weakness: feedback.weaknesses,
+
+        summary: feedback.summary,
+      };
     }
 
     // save interview
@@ -143,6 +183,10 @@ export const answerQuestion = async (req, res) => {
       currentQuestion: interview.currentQuestion,
 
       completed: interview.completed,
+
+      feedback: interview.feedback,
+
+      score: interview.score,
     });
   } catch (error) {
     console.log(error);

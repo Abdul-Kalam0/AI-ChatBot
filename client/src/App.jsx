@@ -12,6 +12,7 @@ const App = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setTechForm((prev) => ({
       ...prev,
       [name]: value,
@@ -26,46 +27,78 @@ const App = () => {
         techStack: techForm.tech,
         difficulty: techForm.difficulty,
       });
+
       navigate("/interview", {
         state: {
           interviewId: res.data.interviewId,
           question: res.data.question,
         },
       });
-      console.log(res);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
-      <h1>AI Interview Platform</h1>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          type="text"
-          value={techForm.tech}
-          name="tech"
-          placeholder="Enter the tech whose interview you want to start"
-          onChange={handleChange}
-        />
-        <br />
-        <select
-          value={techForm.difficulty}
-          name="difficulty"
-          onChange={handleChange}
-        >
-          <option value="">Select Difficulty</option>
-          <option value="Beginner">Begineer</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+      <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
+        <h1 className="text-4xl font-bold text-center mb-2">
+          AI Interview Platform
+        </h1>
 
-        <div>
-          <button type="submit">Start Interview</button>
-        </div>
-      </form>
-    </>
+        <p className="text-zinc-400 text-center mb-8">
+          Practice technical interviews with AI
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Tech Stack */}
+          <div>
+            <label className="block mb-2 text-sm text-zinc-300">
+              Tech Stack
+            </label>
+
+            <textarea
+              value={techForm.tech}
+              name="tech"
+              placeholder="React, Node.js, MongoDB..."
+              onChange={handleChange}
+              rows={4}
+              className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500 resize-none"
+            />
+          </div>
+
+          {/* Difficulty */}
+          <div>
+            <label className="block mb-2 text-sm text-zinc-300">
+              Difficulty
+            </label>
+
+            <select
+              value={techForm.difficulty}
+              name="difficulty"
+              onChange={handleChange}
+              className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500"
+            >
+              <option value="">Select Difficulty</option>
+
+              <option value="Beginner">Beginner</option>
+
+              <option value="Intermediate">Intermediate</option>
+
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+
+          {/* Button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-200 rounded-xl py-4 font-semibold text-lg"
+          >
+            Start Interview
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

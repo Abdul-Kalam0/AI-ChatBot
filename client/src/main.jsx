@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App.jsx";
 import Interview from "./pages/Interview.jsx";
+import "./index.css";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
