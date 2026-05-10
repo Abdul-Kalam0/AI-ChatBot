@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import API from "./services/api";
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
+  const navigate = useNavigate();
+
   const [techForm, setTechForm] = useState({
     tech: "",
     difficulty: "",
@@ -22,6 +25,12 @@ const App = () => {
       const res = await API.post("/interview/start", {
         techStack: techForm.tech,
         difficulty: techForm.difficulty,
+      });
+      navigate("/interview", {
+        state: {
+          interviewId: res.data.interviewId,
+          question: res.data.question,
+        },
       });
       console.log(res);
     } catch (error) {
