@@ -11,11 +11,15 @@ const app = express();
 app.use(express.json());
 
 // CORS setup
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://interviewmock-001.vercel.app",
+    credentials: true,
+  }),
+);
 
 // Routes
 app.use("/api/interview", interviewRoutes);
-
 
 app.get("/", (req, res) => {
   res.send("<h1>InterviewMock backend running✅</h1>");
