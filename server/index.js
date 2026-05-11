@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import interviewRoutes from "./routes/interviewRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -18,11 +19,17 @@ app.use(
   }),
 );
 
-// Routes
+// Interview Route
 app.use("/api/interview", interviewRoutes);
 
+//Auth Route
+app.use("/api", authRoutes);
+
 app.get("/", (req, res) => {
-  res.send("<h1>InterviewMock backend running✅</h1>");
+  res.status(200).json({
+    success: true,
+    message: "InterviewMock backend running",
+  });
 });
 
 export default app;
