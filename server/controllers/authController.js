@@ -140,3 +140,36 @@ export const logout = async (req, res) => {
     });
   }
 };
+
+export const me = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const user = await User.findById(id);
+
+    // check user
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User details fetched successfully",
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Me Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
