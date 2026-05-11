@@ -19,11 +19,11 @@ app.use(
   }),
 );
 
+//Auth Route
+app.use("/api/auth", authRoutes);
+
 // Interview Route
 app.use("/api/interview", interviewRoutes);
-
-//Auth Route
-app.use("/api", authRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({

@@ -6,11 +6,12 @@ import {
   feedbackSummary,
   startInterview,
 } from "../controllers/interviewController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
-router.post("/start", startInterview);
+router.post("/start", authMiddleware, startInterview);
 
-router.post("/answer", answerQuestion);
+router.post("/answer", authMiddleware, answerQuestion);
 
-router.get("/summary/:interviewId", feedbackSummary);
+router.get("/summary/:interviewId", authMiddleware, feedbackSummary);
 
 export default router;
