@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
+import cookieParser from "cookie-parser";
 
 import interviewRoutes from "./routes/interviewRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -10,11 +11,13 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 // CORS setup
 app.use(
   cors({
-    origin: "https://interviewmock-001.vercel.app",
+    origin: "http://localhost:5173",
+    // origin: "https://interviewmock-001.vercel.app",
     credentials: true,
   }),
 );
