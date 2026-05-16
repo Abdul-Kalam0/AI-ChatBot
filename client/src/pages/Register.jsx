@@ -4,36 +4,52 @@ import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { loding, register } = useAuth();
+
+  const { loading, register } = useAuth();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
   });
 
-  const handleChange = async (e) => {
+  // handle input
+  const handleChange = (e) => {
     const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await register(form);
+
       navigate("/login");
     } catch (error) {
       console.error(error);
     }
   };
+
+  // loading state
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <>
       <h1>Register</h1>
+
       <form onSubmit={handleSubmit}>
-        <label htmlFor="">Name</label>
+        <label>Name</label>
+
         <br />
+
         <div>
           <input
             type="text"
@@ -42,8 +58,11 @@ const Register = () => {
             onChange={handleChange}
           />
         </div>
-        <label htmlFor="">Email</label>
+
+        <label>Email</label>
+
         <br />
+
         <div>
           <input
             type="email"
@@ -52,7 +71,11 @@ const Register = () => {
             onChange={handleChange}
           />
         </div>
-        <label htmlFor="">Password</label> <br />
+
+        <label>Password</label>
+
+        <br />
+
         <div>
           <input
             type="password"
@@ -61,6 +84,7 @@ const Register = () => {
             onChange={handleChange}
           />
         </div>
+
         <button type="submit">Register</button>
       </form>
     </>
