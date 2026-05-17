@@ -1,44 +1,70 @@
-import React from "react";
-import { StrictMode } from "react";
+import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import "./index.css";
 
 import App from "./App.jsx";
 import Interview from "./pages/Interview.jsx";
-import "./index.css";
 import Feedback from "./pages/Feedback.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
+import NotFound from "./pages/NotFound.jsx";
+
 import { AuthProvider } from "./context/AuthContext.jsx";
+
 import PublicRoute from "./routes/PublicRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
+  // =========================
+  // PUBLIC ROUTES
+  // =========================
   {
     element: <PublicRoute />,
     children: [
-      { path: "/", element: <Login /> },
-      { path: "/register", element: <Register /> },
+      {
+        path: "/",
+        element: <Login />,
+      },
+
+      {
+        path: "/register",
+        element: <Register />,
+      },
     ],
   },
+
+  // =========================
+  // PROTECTED ROUTES
+  // =========================
   {
     element: <ProtectedRoute />,
     children: [
       {
+        path: "/dashboard",
         element: <App />,
-        children: [
-          {
-            path: "/interview",
-            element: <Interview />,
-          },
-          { path: "/feedback/:interviewId", element: <Feedback /> },
-        ],
       },
-      // {
-      //   path: "/dashboard",
-      //   element: <App />,
-      // },
+
+      {
+        path: "/interview",
+        element: <Interview />,
+      },
+
+      {
+        path: "/feedback/:interviewId",
+        element: <Feedback />,
+      },
     ],
+  },
+
+  // =========================
+  // 404 ROUTE
+  // =========================
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
