@@ -25,14 +25,19 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/dashboard",
         element: <App />,
+        children: [
+          {
+            path: "/interview",
+            element: <Interview />,
+          },
+          { path: "/feedback/:interviewId", element: <Feedback /> },
+        ],
       },
-      {
-        path: "/interview",
-        element: <Interview />,
-      },
-      { path: "/feedback/:interviewId", element: <Feedback /> },
+      // {
+      //   path: "/dashboard",
+      //   element: <App />,
+      // },
     ],
   },
 ]);
