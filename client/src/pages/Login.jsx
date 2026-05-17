@@ -94,7 +94,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition duration-200"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Login" : "Logging in..."}
           </button>
         </form>
 
