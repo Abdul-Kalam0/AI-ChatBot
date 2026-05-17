@@ -60,7 +60,7 @@ const router = createBrowserRouter([
   },
 
   // =========================
-  // 404 ROUTE
+  // 404 ROUTE for Invalid route after login
   // =========================
   {
     path: "*",
