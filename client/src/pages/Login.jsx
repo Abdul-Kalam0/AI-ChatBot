@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+
 import { useAuth } from "../context/AuthContext";
+
 import { Link, useNavigate } from "react-router-dom";
+
+import { GoogleLogin } from "@react-oauth/google";
+
+import API from "../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,7 +18,9 @@ const Login = () => {
     password: "",
   });
 
-  // handle input
+  // =========================
+  // HANDLE INPUT
+  // =========================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -22,7 +30,9 @@ const Login = () => {
     }));
   };
 
-  // handle submit
+  // =========================
+  // NORMAL LOGIN
+  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -35,13 +45,20 @@ const Login = () => {
     }
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-  //       <h1 className="text-2xl font-semibold">Loading...</h1>
-  //     </div>
-  //   );
-  // }
+  // =========================
+  // GOOGLE LOGIN
+  // =========================
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      await API.post("/auth/google", {
+        credential: credentialResponse.credential,
+      });
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -55,7 +72,9 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Form */}
+        {/* =========================
+            LOGIN FORM
+        ========================= */}
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Email */}
           <div>
@@ -69,7 +88,17 @@ const Login = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-black"
+              className="
+                w-full
+                border
+                border-gray-300
+                rounded-lg
+                px-4
+                py-3
+                outline-none
+                focus:ring-2
+                focus:ring-black
+              "
             />
           </div>
 
@@ -85,25 +114,73 @@ const Login = () => {
               value={form.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-black"
+              className="
+                w-full
+                border
+                border-gray-300
+                rounded-lg
+                px-4
+                py-3
+                outline-none
+                focus:ring-2
+                focus:ring-black
+              "
             />
           </div>
 
-          {/* Button */}
+          {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition duration-200"
+            disabled={loading}
+            className="
+              w-full
+              bg-black
+              text-white
+              py-3
+              rounded-lg
+              font-medium
+              hover:bg-gray-800
+              transition
+              duration-200
+              disabled:opacity-50
+            "
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
+
+        {/* Divider */}
+        <div className="flex items-center my-6">
+          <div className="flex-1 h-[1px] bg-gray-300"></div>
+
+          <span className="px-3 text-sm text-gray-500">OR</span>
+
+          <div className="flex-1 h-[1px] bg-gray-300"></div>
+        </div>
+
+        {/* =========================
+            GOOGLE LOGIN
+        ========================= */}
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => {
+              console.log("Google Login Failed");
+            }}
+          />
+        </div>
 
         {/* Register Link */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Don&apos;t have an account?
           <Link
             to="/register"
-            className="text-black font-semibold ml-1 hover:underline"
+            className="
+              text-black
+              font-semibold
+              ml-1
+              hover:underline
+            "
           >
             Register
           </Link>

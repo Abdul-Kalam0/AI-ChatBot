@@ -1,6 +1,88 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    // validation
+    if (!credential) {
+      return res.status(400).json({
+        success: false,
+        message: "Credential missing",
+      });
+    }
+
+    // verify token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    // user data
+    const payload = ticket.getPayload();
+
+    const { sub, email, name, picture } = payload;
+
+    // find existing user
+    let user = await User.findOne({ email });
+
+    // create user if not exists
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        googleId: sub,
+        avatar: picture,
+      });
+    }
+
+    // generate jwt
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+      },
+
+      process.env.JWT_SECRET,
+
+      {
+        expiresIn: "1d",
+      },
+    );
+
+    // set cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Google login successful",
+
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Google Login Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Google login failed",
+    });
+  }
+};
 
 export const register = async (req, res) => {
   try {
@@ -50,7 +132,6 @@ export const register = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      message: error.message,
     });
   }
 };
@@ -72,6 +153,13 @@ export const login = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Invalid credentials",
+      });
+    }
+    // google account check
+    if (!user.password) {
+      return res.status(400).json({
+        success: false,
+        message: "This account was created using Google login",
       });
     }
 
