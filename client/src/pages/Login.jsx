@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 
 import API from "../services/api";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,10 +39,10 @@ const Login = () => {
 
     try {
       await login(form);
-
+      toast.success("Login successfully");
       navigate("/dashboard");
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "Login failed");
     }
   };
 
@@ -53,10 +54,10 @@ const Login = () => {
       await API.post("/auth/google", {
         credential: credentialResponse.credential,
       });
-
+      toast.success("Login successfully");
       navigate("/dashboard");
     } catch (error) {
-      console.error("Google Login Error:", error);
+      toast.error(error.response?.data?.message || "Google login failed");
     }
   };
 

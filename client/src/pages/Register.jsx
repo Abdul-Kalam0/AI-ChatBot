@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -29,10 +30,11 @@ const Register = () => {
 
     try {
       await register(form);
+      toast.success("Registered Succssful");
 
       navigate("/");
     } catch (error) {
-      console.error(error);
+      toast.error(error);
     }
   };
 

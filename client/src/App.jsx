@@ -3,6 +3,7 @@ import API from "./services/api";
 import { useNavigate } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar";
+import { toast } from "react-toastify";
 
 const App = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const App = () => {
         },
       });
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to start interview");
     }
   };
 

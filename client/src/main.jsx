@@ -18,6 +18,9 @@ import PublicRoute from "./routes/PublicRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const router = createBrowserRouter([
   // =========================
   // PUBLIC ROUTES
@@ -73,6 +76,15 @@ createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <AuthProvider>
       <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
     </AuthProvider>
   </GoogleOAuthProvider>,
 );

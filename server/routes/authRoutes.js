@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/register", authRateLimiter, register);
 router.post("/login", authRateLimiter, login);
-router.post("/google", authRateLimiter, googleLogin);
+router.post("/google", googleLogin);
 router.post("/logout", authRateLimiter, logout);
 router.get("/me", authMiddleware, me);
 
