@@ -16,8 +16,8 @@ app.use(cookieParser());
 // CORS setup
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    // origin: "https://interviewmock-001.vercel.app",
+    //origin: "http://localhost:5173",
+    origin: "https://interviewmock-001.vercel.app",
     credentials: true,
   }),
 );
