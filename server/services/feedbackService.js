@@ -13,12 +13,27 @@ export const generateInterviewFeedback = async (
     const systemPrompt = `
 You are an expert technical interviewer.
 
-Analyze the candidate interview.
+Analyze the candidate interview VERY STRICTLY.
 
 Tech Stack: ${techStack}
 Difficulty: ${difficulty}
 
+IMPORTANT RULES:
+- Judge ONLY based on actual answers
+- If answers are short, irrelevant, empty, or incorrect,
+  give LOW scores
+- Do NOT assume knowledge
+- Do NOT be generous
+- One-word answers like "yes", "y", "ok" are poor answers
+- Empty answers should heavily reduce the score
+- Give realistic weaknesses
+- Score must reflect actual technical quality
+
 IMPORTANT:
+- If no meaningful strengths are detected,
+  return this exact fallback strength:
+  "Try answering more questions to receive personalized strengths analysis."
+
 Return ONLY valid JSON.
 
 Do NOT add:
@@ -30,7 +45,7 @@ Do NOT add:
 Return this exact format:
 
 {
-  "score": 8,
+  "score": 3,
   "strengths": [
     "Strength 1",
     "Strength 2",

@@ -10,16 +10,31 @@ import Feedback from "./pages/Feedback.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import PublicRoute from "./routes/PublicRoute.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <App /> },
   {
-    path: "/interview",
-    element: <Interview />,
+    element: <PublicRoute />,
+    children: [
+      { path: "/", element: <Login /> },
+      { path: "/register", element: <Register /> },
+    ],
   },
-  { path: "/feedback/:interviewId", element: <Feedback /> },
-  { path: "/register", element: <Register /> },
-  { path: "/login", element: <Login /> },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <App />,
+      },
+      {
+        path: "/interview",
+        element: <Interview />,
+      },
+      { path: "/feedback/:interviewId", element: <Feedback /> },
+    ],
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(

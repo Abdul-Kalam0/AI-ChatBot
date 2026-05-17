@@ -1,8 +1,4 @@
-import React, {
-  useEffect, // ✅ ADDED
-  useState,
-} from "react";
-
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import API from "../services/api";
@@ -12,7 +8,7 @@ const Interview = () => {
 
   const location = useLocation();
 
-  const { interviewId, question } = location.state;
+  const { interviewId, question, techStack } = location.state;
 
   const [aiQuestion, setAiQuestion] = useState(question);
 
@@ -22,13 +18,17 @@ const Interview = () => {
 
   const [questionNo, setQuestionNo] = useState(1);
 
+  const [loading, setLoading] = useState(false);
+
+  // timer
+  const [timeLeft, setTimeLeft] = useState(5);
+
   // ===================================
-  // ✅ ADDED: AUTO REDIRECT AFTER COMPLETE
+  // AUTO REDIRECT AFTER COMPLETE
   // ===================================
   useEffect(() => {
     if (completed) {
       const timer = setTimeout(() => {
-        navigate("/");
         navigate(`/feedback/${interviewId}`, {
           state: {
             interviewId,
@@ -40,12 +40,37 @@ const Interview = () => {
     }
   }, [completed, navigate, interviewId]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // ===================================
+  // TIMER LOGIC
+  // ===================================
+  useEffect(() => {
+    if (completed || loading) return;
 
-    if (!answer.trim() || completed) return;
+    if (timeLeft === 0) {
+      handleSubmit(true);
+
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, completed, loading]);
+
+  // ===================================
+  // SUBMIT ANSWER
+  // ===================================
+  const handleSubmit = async (isAutoSubmit = false) => {
+    if (completed || loading) return;
+
+    // prevent empty manual submit
+    if (!isAutoSubmit && !answer.trim()) return;
 
     try {
+      setLoading(true);
+
       const res = await API.post("/interview/answer", {
         interviewId,
         answer,
@@ -58,173 +83,227 @@ const Interview = () => {
       if (res.data.completed) {
         setCompleted(true);
 
-        // ✅ UPDATED
-        setAiQuestion(res.data.reply);
-      } else {
-        // next AI question
-        setAiQuestion(res.data.reply);
+        return;
       }
+
+      // next AI question
+      setAiQuestion(res.data.reply);
+
+      // reset timer
+      setTimeLeft(5);
 
       // clear textarea
       setAnswer("");
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col">
-      {/* Header */}
-      <header className="border-b border-zinc-800 bg-black/40 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-          <button
-            onClick={() => navigate("/")}
-            className="
-              bg-zinc-900
-              border
-              border-zinc-800
-              hover:bg-zinc-800
-              transition
-              px-4
-              py-2
-              rounded-xl
-              text-sm
-            "
-          >
-            ⬅ Back
-          </button>
-
+    <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-10">
+          {/* Left */}
           <div>
-            <h1 className="text-xl font-semibold">AI Interview</h1>
+            <h1 className="text-4xl font-bold mb-2">AI Interview</h1>
 
-            <p className="text-zinc-500 text-sm">Technical Interview Session</p>
+            <p className="text-zinc-400">Technical Interview Session</p>
           </div>
-        </div>
-      </header>
 
-      {/* Main Chat Area */}
-      <main className="flex-1 overflow-y-auto px-4 py-10">
-        <div className="max-w-2xl mx-auto">
-          {/* AI Profile */}
-          <div className="flex items-center gap-3 mb-4">
-            <div
+          {/* Right */}
+          <div className="flex items-center gap-4">
+            {/* Timer */}
+            {!completed && (
+              <div
+                className="
+                  bg-zinc-900
+                  border
+                  border-zinc-800
+                  px-5
+                  py-3
+                  rounded-2xl
+                  font-medium
+                "
+              >
+                ⏳ {Math.floor(timeLeft / 60)}:
+                {String(timeLeft % 60).padStart(2, "0")}
+              </div>
+            )}
+
+            {/* Back */}
+            <button
+              onClick={() => navigate("/dashboard")}
               className="
-                w-11
-                h-11
-                rounded-full
-                bg-blue-600
-                flex
-                items-center
-                justify-center
-                font-bold
-                shadow-lg
+                bg-zinc-900
+                border
+                border-zinc-800
+                hover:bg-zinc-800
+                transition
+                px-5
+                py-3
+                rounded-2xl
               "
             >
-              AI
-            </div>
-
-            <div>
-              <h2 className="font-medium">AI Interviewer</h2>
-
-              <p className="text-sm text-zinc-500">Technical Question</p>
-            </div>
+              ⬅ Back
+            </button>
           </div>
+        </div>
 
-          {/* Question Card */}
+        {/* Question Card */}
+        {!completed && (
           <div
             className="
               bg-zinc-900
               border
               border-zinc-800
               rounded-3xl
-              px-8
-              py-7
+              p-8
+              mb-8
               shadow-xl
             "
           >
-            <p
-              className="
-                text-zinc-400
-                text-xs
-                uppercase
-                tracking-[0.2em]
-                mb-5
-              "
-            >
-              Question {questionNo}/10
-            </p>
+            {/* AI Header */}
+            <div className="flex items-center gap-4 mb-8">
+              <div
+                className="
+                  w-14
+                  h-14
+                  rounded-full
+                  bg-blue-600
+                  flex
+                  items-center
+                  justify-center
+                  text-lg
+                  font-bold
+                "
+              >
+                AI
+              </div>
 
-            <p
-              className="
-                text-zinc-100
-                text-[18px]
-                leading-9
-                whitespace-pre-wrap
-                font-normal
-              "
-            >
-              {aiQuestion}
-            </p>
+              <div>
+                <h2 className="text-lg font-semibold">AI Interviewer</h2>
+
+                <p className="text-zinc-400 text-sm">{techStack}</p>
+              </div>
+            </div>
+
+            {/* Question */}
+            <div>
+              <p
+                className="
+                  text-zinc-500
+                  mb-5
+                  uppercase
+                  tracking-[0.2em]
+                  text-xs
+                "
+              >
+                Question {questionNo}/10
+              </p>
+
+              <div
+                className="
+                  text-zinc-100
+                  text-[17px]
+                  leading-9
+                  whitespace-pre-wrap
+                "
+              >
+                {loading ? (
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="
+                        w-5
+                        h-5
+                        border-2
+                        border-zinc-500
+                        border-t-blue-500
+                        rounded-full
+                        animate-spin
+                      "
+                    />
+
+                    <span className="text-zinc-400">
+                      Generating next question...
+                    </span>
+                  </div>
+                ) : (
+                  aiQuestion
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </main>
+        )}
 
-      {/* Input Area */}
-      <footer className="border-t border-zinc-800 bg-[#0a0a0a]">
-        <div className="max-w-3xl mx-auto p-5">
-          <form onSubmit={handleSubmit} className="flex items-end gap-4">
-            {/* Textarea */}
-            <textarea
-              disabled={completed}
-              name="answer"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Type your answer..."
-              rows={4}
-              className="
-                flex-1
-                bg-zinc-900
-                border
-                border-zinc-800
-                rounded-3xl
-                px-5
-                py-4
-                outline-none
-                resize-none
-                focus:border-blue-500
-                text-zinc-100
-                leading-8
-                placeholder:text-zinc-500
-              "
-            />
+        {/* Answer Card */}
+        {!completed && (
+          <div
+            className="
+              bg-zinc-900
+              border
+              border-zinc-800
+              rounded-3xl
+              p-8
+              shadow-xl
+            "
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
 
-            {/* Submit Button */}
-            <button
-              disabled={completed}
-              type="submit"
-              className={`
-                bg-blue-600
-                hover:bg-blue-700
-                transition
-                px-7
-                h-[58px]
-                rounded-2xl
-                font-medium
-                shadow-lg
-                whitespace-nowrap
-
-                ${completed ? "opacity-50 cursor-not-allowed" : ""}
-              `}
+                handleSubmit();
+              }}
             >
-              Submit
-            </button>
-          </form>
-        </div>
-      </footer>
+              {/* Textarea */}
+              <textarea
+                disabled={completed || loading}
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                placeholder="Type your answer..."
+                rows={6}
+                className="
+                  w-full
+                  bg-zinc-800
+                  border
+                  border-zinc-700
+                  rounded-2xl
+                  px-5
+                  py-4
+                  outline-none
+                  resize-none
+                  focus:border-blue-500
+                  text-zinc-100
+                  placeholder:text-zinc-500
+                  leading-8
+                  mb-6
+                "
+              />
 
-      {/* ===================================
-           ✅ ADDED: COMPLETION POPUP
-      =================================== */}
+              {/* Submit */}
+              <button
+                disabled={completed || loading}
+                type="submit"
+                className="
+                  w-full
+                  bg-blue-600
+                  hover:bg-blue-700
+                  transition
+                  py-4
+                  rounded-2xl
+                  font-semibold
+                "
+              >
+                {loading ? "Generating..." : "Submit Answer"}
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+
+      {/* Completion Modal */}
       {completed && (
         <div
           className="
@@ -274,10 +353,11 @@ const Interview = () => {
 
             {/* Description */}
             <p className="text-zinc-400 leading-7">
-              Great job completing your AI interview session.
+              Congratulations! You have successfully completed your AI interview
+              session.
             </p>
 
-            {/* Redirect text */}
+            {/* Redirect */}
             <p className="text-zinc-500 text-sm mt-6">
               Redirecting to feedback page in 5 seconds...
             </p>

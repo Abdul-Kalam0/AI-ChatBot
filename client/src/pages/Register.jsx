@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Register = () => {
     try {
       await register(form);
 
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -38,56 +38,96 @@ const Register = () => {
 
   // loading state
   if (loading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <h1 className="text-2xl font-semibold">Loading...</h1>
+      </div>
+    );
   }
 
   return (
-    <>
-      <h1>Register</h1>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Create Account</h1>
 
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-
-        <br />
-
-        <div>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-          />
+          <p className="text-gray-500 mt-2">
+            Start practicing AI mock interviews
+          </p>
         </div>
 
-        <label>Email</label>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Name */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Name
+            </label>
 
-        <br />
+            <input
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Enter your name"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
 
-        <div>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-          />
-        </div>
+          {/* Email */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Email
+            </label>
 
-        <label>Password</label>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
 
-        <br />
+          {/* Password */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Password
+            </label>
 
-        <div>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-          />
-        </div>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Create a password"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
-    </>
+          {/* Button */}
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition duration-200"
+          >
+            {loading ? "Creating account..." : "Register"}
+          </button>
+        </form>
+
+        {/* Login Link */}
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Already have an account?
+          <Link
+            to="/"
+            className="text-black font-semibold ml-1 hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 };
 

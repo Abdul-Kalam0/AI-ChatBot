@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       const res = await API.post("/auth/login", data);
       await checkAuth();
       return res;
-    } catch (error) {
+    } catch (err) {
       const message = err.response?.data?.message || "Login failed";
       setError(message);
       setUser(null);

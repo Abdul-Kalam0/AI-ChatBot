@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import API from "./services/api";
 import { useNavigate } from "react-router-dom";
 
+import Sidebar from "./components/Sidebar";
+
 const App = () => {
   const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const App = () => {
         state: {
           interviewId: res.data.interviewId,
           question: res.data.question,
+          techStack: res.data.techStack,
         },
       });
     } catch (error) {
@@ -40,64 +43,70 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
-      <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
-        <h1 className="text-4xl font-bold text-center mb-2">
-          AI Interview Platform
-        </h1>
+    <div className="flex min-h-screen bg-black text-white">
+      {/* Sidebar */}
+      <Sidebar />
 
-        <p className="text-zinc-400 text-center mb-8">
-          Practice technical interviews with AI
-        </p>
+      {/* Main Content */}
+      <main className="flex-1 flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
+          <h1 className="text-4xl font-bold text-center mb-2">
+            AI Interview Platform
+          </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Tech Stack */}
-          <div>
-            <label className="block mb-2 text-sm text-zinc-300">
-              Tech Stack
-            </label>
+          <p className="text-zinc-400 text-center mb-8">
+            Practice technical interviews with AI
+          </p>
 
-            <textarea
-              value={techForm.tech}
-              name="tech"
-              placeholder="React, Node.js, MongoDB..."
-              onChange={handleChange}
-              rows={4}
-              className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500 resize-none"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Tech Stack */}
+            <div>
+              <label className="block mb-2 text-sm text-zinc-300">
+                Tech Stack
+              </label>
 
-          {/* Difficulty */}
-          <div>
-            <label className="block mb-2 text-sm text-zinc-300">
-              Difficulty
-            </label>
+              <textarea
+                value={techForm.tech}
+                name="tech"
+                placeholder="React, Node.js, MongoDB..."
+                onChange={handleChange}
+                rows={4}
+                className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500 resize-none"
+              />
+            </div>
 
-            <select
-              value={techForm.difficulty}
-              name="difficulty"
-              onChange={handleChange}
-              className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500"
+            {/* Difficulty */}
+            <div>
+              <label className="block mb-2 text-sm text-zinc-300">
+                Difficulty
+              </label>
+
+              <select
+                value={techForm.difficulty}
+                name="difficulty"
+                onChange={handleChange}
+                className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500"
+              >
+                <option value="">Select Difficulty</option>
+
+                <option value="Beginner">Beginner</option>
+
+                <option value="Intermediate">Intermediate</option>
+
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+
+            {/* Button */}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-200 rounded-xl py-4 font-semibold text-lg"
             >
-              <option value="">Select Difficulty</option>
-
-              <option value="Beginner">Beginner</option>
-
-              <option value="Intermediate">Intermediate</option>
-
-              <option value="Advanced">Advanced</option>
-            </select>
-          </div>
-
-          {/* Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-200 rounded-xl py-4 font-semibold text-lg"
-          >
-            Start Interview
-          </button>
-        </form>
-      </div>
+              Start Interview
+            </button>
+          </form>
+        </div>
+      </main>
     </div>
   );
 };

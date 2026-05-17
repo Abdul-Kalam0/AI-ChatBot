@@ -56,6 +56,7 @@ export const startInterview = async (req, res) => {
       interviewId: interview._id,
 
       question: firstQuestion,
+      techStack,
     });
   } catch (error) {
     console.log(error);
@@ -75,12 +76,15 @@ export const answerQuestion = async (req, res) => {
     const { interviewId, answer } = req.body;
 
     // validation
-    if (!interviewId || !answer?.trim()) {
+    if (!interviewId) {
       return res.status(400).json({
         success: false,
-        message: "Interview ID and answer are required",
+        message: "Interview ID is required",
       });
     }
+
+    // fallback for auto submit
+    const safeAnswer = answer?.trim() || "No answer provided";
 
     // find interview
     const interview = await Interview.findById(interviewId);
@@ -106,7 +110,7 @@ export const answerQuestion = async (req, res) => {
 
       role: "user",
 
-      content: answer,
+      content: safeAnswer,
 
       questionNumber: interview.currentQuestion,
     });
