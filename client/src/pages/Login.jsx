@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
 
-  const { loading, login } = useAuth();
+  const { loading, login, checkAuth } = useAuth();
 
   const [form, setForm] = useState({
     email: "",
@@ -39,7 +39,7 @@ const Login = () => {
 
     try {
       await login(form);
-      toast.success("Login successfully");
+      toast.success("Login successful");
       navigate("/dashboard");
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
@@ -54,7 +54,8 @@ const Login = () => {
       await API.post("/auth/google", {
         credential: credentialResponse.credential,
       });
-      toast.success("Login successfully");
+      await checkAuth();
+      toast.success("Login successful");
       navigate("/dashboard");
     } catch (error) {
       toast.error(error.response?.data?.message || "Google login failed");
