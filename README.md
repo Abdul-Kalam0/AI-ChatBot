@@ -12,16 +12,16 @@ AI Mock Interview Platform is a full-stack AI-powered web application that helps
 
 ## 📌 Features
 
-* 🔐 Authentication (JWT + Google OAuth)
-* 🍪 Secure HTTP-only Cookie Authentication
-* 🛡️ Protected Routes & APIs
-* 🤖 AI-generated Technical Interview Questions
-* ⏳ Real-time Timed Interview Sessions
-* 📊 AI-generated Feedback & Performance Analysis
-* 🎯 Difficulty-based Interview Flow
-* 📱 Fully Responsive UI
-* 🎨 Modern SaaS-style Interface
-* 🔒 Rate Limiting & API Security
+- 🔐 Authentication (JWT + Google OAuth)
+- 🍪 Secure HTTP-only Cookie Authentication
+- 🛡️ Protected Routes & APIs
+- 🤖 AI-generated Technical Interview Questions
+- ⏳ Real-time Timed Interview Sessions
+- 📊 AI-generated Feedback & Performance Analysis
+- 🎯 Difficulty-based Interview Flow
+- 📱 Fully Responsive UI
+- 🎨 Modern SaaS-style Interface
+- 🔒 Rate Limiting & API Security
 
 ---
 
@@ -29,42 +29,50 @@ AI Mock Interview Platform is a full-stack AI-powered web application that helps
 
 ### Frontend
 
-* React (Vite)
-* Tailwind CSS
-* React Router DOM
-* Axios
-* React Toastify
+- React (Vite)
+- Tailwind CSS
+- React Router DOM
+- Axios
+- React Toastify
 
 ### Backend
 
-* Node.js
-* Express.js
-* MongoDB (Mongoose)
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
 
 ### Authentication
 
-* JWT (HTTP-only cookies)
-* Google OAuth
+- JWT (HTTP-only cookies)
+- Google OAuth
 
 ### AI Integration
 
-* Gemini API
+- Gemini API
 
 ### Deployment
 
-* Frontend: Vercel
-* Backend: Vercel
+- Frontend: Vercel
+- Backend: Vercel
 
 ---
 
 ## 📸 Screenshots
+
+### Login
+
+Add dashboard screenshot here
+
+```md id="7yxf93"
+![Dashboard](./screenshots/Login.jpg)
+```
 
 ### Dashboard
 
 Add dashboard screenshot here
 
 ```md id="7yxf93"
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](./screenshots/Dashboard.jpg)
 ```
 
 ### Interview Page
@@ -72,7 +80,7 @@ Add dashboard screenshot here
 Add interview page screenshot here
 
 ```md id="x6d0p3"
-![Interview](./screenshots/interview.png)
+![Interview](./screenshots/Interview.jpg)
 ```
 
 ### Feedback Page
@@ -80,7 +88,7 @@ Add interview page screenshot here
 Add feedback page screenshot here
 
 ```md id="j7skx9"
-![Feedback](./screenshots/feedback.png)
+![Feedback](./screenshots/Feedback.jpg)
 ```
 
 ---
@@ -180,14 +188,14 @@ npm run dev
 
 ### Email/Password Login
 
-* User logs in → JWT token stored in HTTP-only cookies
-* Protected routes validated using `/auth/me`
+- User logs in → JWT token stored in HTTP-only cookies
+- Protected routes validated using `/auth/me`
 
 ### Google OAuth
 
-* User logs in using Google
-* Backend verifies Google credential
-* JWT cookie is issued after verification
+- User logs in using Google
+- Backend verifies Google credential
+- JWT cookie is issued after verification
 
 ---
 
@@ -210,47 +218,47 @@ GET    /interview/summary/:interviewId
 
 ## 🏗️ Architecture & Security
 
-* 🏗️ Scalable MERN architecture
-* 🍪 Cross-origin secure cookie authentication
-* 🛡️ Rate limiting for authentication routes
-* 🔒 Protected backend APIs using JWT middleware
-* ⚡ Optimized frontend routing with protected/public routes
+- 🏗️ Scalable MERN architecture
+- 🍪 Cross-origin secure cookie authentication
+- 🛡️ Rate limiting for authentication routes
+- 🔒 Protected backend APIs using JWT middleware
+- ⚡ Optimized frontend routing with protected/public routes
 
 ---
 
 ## 📊 Project Highlights
 
-* ⚡ Built multiple REST APIs
-* 🤖 Integrated Gemini AI for dynamic interview generation
-* 🔐 Secure authentication using JWT + OAuth
-* ⏳ Real-time timed interview workflow
-* 📊 Automated AI feedback and scoring system
-* 🎨 Production-grade SaaS-inspired UI/UX
-* 🚀 Deployed with cross-origin cookie handling
+- ⚡ Built multiple REST APIs
+- 🤖 Integrated Gemini AI for dynamic interview generation
+- 🔐 Secure authentication using JWT + OAuth
+- ⏳ Real-time timed interview workflow
+- 📊 Automated AI feedback and scoring system
+- 🎨 Production-grade SaaS-inspired UI/UX
+- 🚀 Deployed with cross-origin cookie handling
 
 ---
 
 ## 🧠 Learnings
 
-* Full-stack MERN architecture
-* Authentication & authorization
-* Cross-origin cookie handling
-* AI-integrated applications
-* REST API design
-* State management & protected routing
-* Modern UI/UX design with Tailwind CSS
-* Deployment & production environment handling
+- Full-stack MERN architecture
+- Authentication & authorization
+- Cross-origin cookie handling
+- AI-integrated applications
+- REST API design
+- State management & protected routing
+- Modern UI/UX design with Tailwind CSS
+- Deployment & production environment handling
 
 ---
 
 ## 🚧 Future Improvements
 
-* 🎤 Voice-based AI Interviews
-* 📹 Video Interview Support
-* 📈 User Analytics Dashboard
-* 🧠 Advanced AI Evaluation
-* 🌍 Multi-language Support
-* 🏆 Leaderboard & Rankings
+- 🎤 Voice-based AI Interviews
+- 📹 Video Interview Support
+- 📈 User Analytics Dashboard
+- 🧠 Advanced AI Evaluation
+- 🌍 Multi-language Support
+- 🏆 Leaderboard & Rankings
 
 ---
 
