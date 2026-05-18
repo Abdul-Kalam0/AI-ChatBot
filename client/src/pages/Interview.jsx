@@ -35,7 +35,7 @@ const Interview = () => {
             interviewId,
           },
         });
-      }, 180000);
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
