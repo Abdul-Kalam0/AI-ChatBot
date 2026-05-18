@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import API from "./services/api";
 import { useNavigate } from "react-router-dom";
 
-import Sidebar from "./components/Sidebar";
 import { toast } from "react-toastify";
 
 const App = () => {
@@ -44,25 +43,42 @@ const App = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-black text-white">
-      {/* Sidebar */}
-      <Sidebar />
+    <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="text-5xl font-bold mb-3">AI Interview Platform</h1>
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
-          <h1 className="text-4xl font-bold text-center mb-2">
-            AI Interview Platform
-          </h1>
-
-          <p className="text-zinc-400 text-center mb-8">
-            Practice technical interviews with AI
+          <p className="text-zinc-400 text-lg">
+            Practice technical interviews with AI and get instant performance
+            feedback.
           </p>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Main Card */}
+        <div
+          className="
+            bg-zinc-900
+            border
+            border-zinc-800
+            rounded-3xl
+            p-8
+            shadow-2xl
+          "
+        >
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Tech Stack */}
             <div>
-              <label className="block mb-2 text-sm text-zinc-300">
+              <label
+                className="
+                  block
+                  mb-3
+                  text-sm
+                  uppercase
+                  tracking-[0.15em]
+                  text-zinc-400
+                "
+              >
                 Tech Stack
               </label>
 
@@ -71,14 +87,36 @@ const App = () => {
                 name="tech"
                 placeholder="React, Node.js, MongoDB..."
                 onChange={handleChange}
-                rows={4}
-                className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500 resize-none"
+                rows={5}
+                className="
+                  w-full
+                  bg-zinc-950
+                  border
+                  border-zinc-700
+                  rounded-2xl
+                  p-5
+                  outline-none
+                  focus:border-blue-500
+                  resize-none
+                  text-zinc-100
+                  placeholder:text-zinc-500
+                  leading-8
+                "
               />
             </div>
 
             {/* Difficulty */}
             <div>
-              <label className="block mb-2 text-sm text-zinc-300">
+              <label
+                className="
+                  block
+                  mb-3
+                  text-sm
+                  uppercase
+                  tracking-[0.15em]
+                  text-zinc-400
+                "
+              >
                 Difficulty
               </label>
 
@@ -86,7 +124,17 @@ const App = () => {
                 value={techForm.difficulty}
                 name="difficulty"
                 onChange={handleChange}
-                className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-4 outline-none focus:border-blue-500"
+                className="
+                  w-full
+                  bg-zinc-950
+                  border
+                  border-zinc-700
+                  rounded-2xl
+                  p-5
+                  outline-none
+                  focus:border-blue-500
+                  text-zinc-100
+                "
               >
                 <option value="">Select Difficulty</option>
 
@@ -101,13 +149,24 @@ const App = () => {
             {/* Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-200 rounded-xl py-4 font-semibold text-lg"
+              className="
+                w-full
+                bg-blue-600
+                hover:bg-blue-700
+                transition-all
+                duration-200
+                rounded-2xl
+                py-5
+                font-semibold
+                text-lg
+                shadow-lg
+              "
             >
               Start Interview
             </button>
           </form>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

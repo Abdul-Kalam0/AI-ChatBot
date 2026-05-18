@@ -1,6 +1,7 @@
 import React from "react";
 import { LogOut, UserCircle2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -8,11 +9,11 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logout();
+      toast.success("Logout successful");
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to logout");
     }
   };
-
   return (
     <nav className="w-full bg-white shadow-sm border-b border-gray-200 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
