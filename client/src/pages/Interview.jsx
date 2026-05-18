@@ -21,7 +21,7 @@ const Interview = () => {
   const [loading, setLoading] = useState(false);
 
   // timer
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(180);
 
   // ===================================
   // AUTO REDIRECT AFTER COMPLETE
@@ -34,7 +34,7 @@ const Interview = () => {
             interviewId,
           },
         });
-      }, 5000);
+      }, 180000);
 
       return () => clearTimeout(timer);
     }
@@ -90,7 +90,7 @@ const Interview = () => {
       setAiQuestion(res.data.reply);
 
       // reset timer
-      setTimeLeft(5);
+      setTimeLeft(180);
 
       // clear textarea
       setAnswer("");
