@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import API from "../services/api";
+import { toast } from "react-toastify";
 
 const Interview = () => {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ const Interview = () => {
       // clear textarea
       setAnswer("");
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to submit answer");
     } finally {
       setLoading(false);
     }

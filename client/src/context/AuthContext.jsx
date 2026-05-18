@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
       return res;
     } catch (err) {
       const message = err.response?.data?.message || "Registration failed";
+      console.log(message);
+
       setError(message);
       setUser(null);
       throw message;

@@ -28,7 +28,9 @@ const Feedback = () => {
 
         setScore(res.data.data.score);
       } catch (error) {
-        console.error(error);
+        console.error(
+          error.response?.data?.message || "Failed to fetch feedback",
+        );
       } finally {
         setLoading(false);
       }

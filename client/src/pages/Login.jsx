@@ -41,7 +41,7 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      toast.error(error || "Login failed");
     }
   };
 
@@ -58,7 +58,7 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Google login failed");
+      toast.error(error || "Google login failed");
     }
   };
 
