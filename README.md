@@ -61,35 +61,25 @@ AI Mock Interview Platform is a full-stack AI-powered web application that helps
 
 ### Login
 
-Add dashboard screenshot here
+![Login](./screenshots/Login.jpg)
 
-```md id="7yxf93"
-![Dashboard](./screenshots/Login.jpg)
-```
+---
 
 ### Dashboard
 
-Add dashboard screenshot here
-
-```md id="7yxf93"
 ![Dashboard](./screenshots/Dashboard.jpg)
-```
+
+---
 
 ### Interview Page
 
-Add interview page screenshot here
-
-```md id="x6d0p3"
 ![Interview](./screenshots/Interview.jpg)
-```
+
+---
 
 ### Feedback Page
 
-Add feedback page screenshot here
-
-```md id="j7skx9"
 ![Feedback](./screenshots/Feedback.jpg)
-```
 
 ---
 
