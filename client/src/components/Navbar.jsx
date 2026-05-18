@@ -39,7 +39,7 @@ const Navbar = () => {
                 {user?.name || "User"}
               </p>
 
-              <p className="text-xs text-gray-500">{user?.email}</p>
+              {/* <p className="text-xs text-gray-500">{user?.email}</p> */}
             </div>
           </div>
 
