@@ -6,12 +6,21 @@ import Navbar from "../components/Navbar";
 const ProtectedRoute = () => {
   const { isLoggedIn, loading } = useAuth();
 
+  // loading spinner
   if (loading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="w-14 h-14 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
   }
+
+  // not authenticated
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
   }
+
+  // authenticated routes
   return (
     <>
       <Navbar />
