@@ -46,13 +46,35 @@ const App = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-5xl font-bold mb-3">AI Interview Platform</h1>
+        <div className="flex items-center justify-between mb-10">
+          {/* Left */}
+          <div>
+            <h1 className="text-5xl font-bold mb-3">AI Interview Platform</h1>
 
-          <p className="text-zinc-400 text-lg">
-            Practice technical interviews with AI and get instant performance
-            feedback.
-          </p>
+            <p className="text-zinc-400 text-lg">
+              Practice technical interviews with AI and get instant performance
+              feedback.
+            </p>
+          </div>
+
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="
+              bg-zinc-900
+              border
+              border-zinc-800
+              hover:bg-zinc-800
+              transition-all
+              duration-200
+              px-5
+              py-3
+              rounded-2xl
+              font-medium
+            "
+          >
+            ⬅ Back
+          </button>
         </div>
 
         {/* Main Card */}

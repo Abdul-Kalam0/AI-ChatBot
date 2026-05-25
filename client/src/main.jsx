@@ -20,6 +20,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Dashboard from "./pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   // =========================
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <Dashboard />,
+      },
+      {
+        path: "/login",
         element: <Login />,
       },
 
@@ -47,7 +52,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/dashboard",
+        path: "/start/interview",
         element: <App />,
       },
 

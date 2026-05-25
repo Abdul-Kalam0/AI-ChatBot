@@ -60,7 +60,7 @@ const Feedback = () => {
           </div>
 
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/")}
             className="
               bg-zinc-900
               border
@@ -72,7 +72,7 @@ const Feedback = () => {
               rounded-2xl
             "
           >
-            ⬅ Back
+            🏠 Home
           </button>
         </div>
 
@@ -158,7 +158,7 @@ const Feedback = () => {
                     text-zinc-200
                   "
               >
-                ✅ {item}
+                {item}
               </li>
             ))}
           </ul>

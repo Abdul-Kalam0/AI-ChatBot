@@ -24,6 +24,9 @@ const Interview = () => {
   // timer
   const [timeLeft, setTimeLeft] = useState(180);
 
+  //popup
+  const [showExitPopup, setShowExitPopup] = useState(false);
+
   // ===================================
   // AUTO REDIRECT AFTER COMPLETE
   // ===================================
@@ -67,7 +70,10 @@ const Interview = () => {
     if (completed || loading) return;
 
     // prevent empty manual submit
-    if (!isAutoSubmit && !answer.trim()) return;
+    if (!isAutoSubmit && !answer.trim()) {
+      toast.warning("Please enter your answer before submitting");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -103,23 +109,25 @@ const Interview = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-10">
-          {/* Left */}
-          <div>
-            <h1 className="text-4xl font-bold mb-2">AI Interview</h1>
+    <>
+      {" "}
+      <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-10">
+            {/* Left */}
+            <div>
+              <h1 className="text-4xl font-bold mb-2">AI Interview</h1>
 
-            <p className="text-zinc-400">Technical Interview Session</p>
-          </div>
+              <p className="text-zinc-400">Technical Interview Session</p>
+            </div>
 
-          {/* Right */}
-          <div className="flex items-center gap-4">
-            {/* Timer */}
-            {!completed && (
-              <div
-                className="
+            {/* Right */}
+            <div className="flex items-center gap-4">
+              {/* Timer */}
+              {!completed && (
+                <div
+                  className="
                   bg-zinc-900
                   border
                   border-zinc-800
@@ -128,16 +136,16 @@ const Interview = () => {
                   rounded-2xl
                   font-medium
                 "
-              >
-                ⏳ {Math.floor(timeLeft / 60)}:
-                {String(timeLeft % 60).padStart(2, "0")}
-              </div>
-            )}
+                >
+                  ⏳ {Math.floor(timeLeft / 60)}:
+                  {String(timeLeft % 60).padStart(2, "0")}
+                </div>
+              )}
 
-            {/* Back */}
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="
+              {/* Back */}
+              <button
+                onClick={() => setShowExitPopup(true)}
+                className="
                 bg-zinc-900
                 border
                 border-zinc-800
@@ -147,16 +155,16 @@ const Interview = () => {
                 py-3
                 rounded-2xl
               "
-            >
-              ⬅ Back
-            </button>
+              >
+                ⬅ Back
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Question Card */}
-        {!completed && (
-          <div
-            className="
+          {/* Question Card */}
+          {!completed && (
+            <div
+              className="
               bg-zinc-900
               border
               border-zinc-800
@@ -165,11 +173,11 @@ const Interview = () => {
               mb-8
               shadow-xl
             "
-          >
-            {/* AI Header */}
-            <div className="flex items-center gap-4 mb-8">
-              <div
-                className="
+            >
+              {/* AI Header */}
+              <div className="flex items-center gap-4 mb-8">
+                <div
+                  className="
                   w-14
                   h-14
                   rounded-full
@@ -180,43 +188,43 @@ const Interview = () => {
                   text-lg
                   font-bold
                 "
-              >
-                AI
+                >
+                  AI
+                </div>
+
+                <div>
+                  <h2 className="text-lg font-semibold">AI Interviewer</h2>
+
+                  <p className="text-zinc-400 text-sm">{techStack}</p>
+                </div>
               </div>
 
+              {/* Question */}
               <div>
-                <h2 className="text-lg font-semibold">AI Interviewer</h2>
-
-                <p className="text-zinc-400 text-sm">{techStack}</p>
-              </div>
-            </div>
-
-            {/* Question */}
-            <div>
-              <p
-                className="
+                <p
+                  className="
                   text-zinc-500
                   mb-5
                   uppercase
                   tracking-[0.2em]
                   text-xs
                 "
-              >
-                Question {questionNo}/10
-              </p>
+                >
+                  Question {questionNo}/10
+                </p>
 
-              <div
-                className="
+                <div
+                  className="
                   text-zinc-100
                   text-[17px]
                   leading-9
                   whitespace-pre-wrap
                 "
-              >
-                {loading ? (
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="
                         w-5
                         h-5
                         border-2
@@ -225,24 +233,24 @@ const Interview = () => {
                         rounded-full
                         animate-spin
                       "
-                    />
+                      />
 
-                    <span className="text-zinc-400">
-                      Generating next question...
-                    </span>
-                  </div>
-                ) : (
-                  aiQuestion
-                )}
+                      <span className="text-zinc-400">
+                        Generating next question...
+                      </span>
+                    </div>
+                  ) : (
+                    aiQuestion
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Answer Card */}
-        {!completed && (
-          <div
-            className="
+          {/* Answer Card */}
+          {!completed && (
+            <div
+              className="
               bg-zinc-900
               border
               border-zinc-800
@@ -250,22 +258,22 @@ const Interview = () => {
               p-8
               shadow-xl
             "
-          >
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-
-                handleSubmit();
-              }}
             >
-              {/* Textarea */}
-              <textarea
-                disabled={completed || loading}
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Type your answer..."
-                rows={6}
-                className="
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+
+                  handleSubmit();
+                }}
+              >
+                {/* Textarea */}
+                <textarea
+                  disabled={completed || loading}
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder="Type your answer..."
+                  rows={6}
+                  className="
                   w-full
                   bg-zinc-800
                   border
@@ -281,13 +289,13 @@ const Interview = () => {
                   leading-8
                   mb-6
                 "
-              />
+                />
 
-              {/* Submit */}
-              <button
-                disabled={completed || loading}
-                type="submit"
-                className="
+                {/* Submit */}
+                <button
+                  disabled={completed || loading}
+                  type="submit"
+                  className="
                   w-full
                   bg-blue-600
                   hover:bg-blue-700
@@ -296,18 +304,18 @@ const Interview = () => {
                   rounded-2xl
                   font-semibold
                 "
-              >
-                {loading ? "Generating..." : "Submit Answer"}
-              </button>
-            </form>
-          </div>
-        )}
-      </div>
+                >
+                  {loading ? "Generating..." : "Submit Answer"}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
 
-      {/* Completion Modal */}
-      {completed && (
-        <div
-          className="
+        {/* Completion Modal */}
+        {completed && (
+          <div
+            className="
             fixed
             inset-0
             bg-black/70
@@ -317,9 +325,9 @@ const Interview = () => {
             justify-center
             z-50
           "
-        >
-          <div
-            className="
+          >
+            <div
+              className="
               bg-zinc-900
               border
               border-zinc-800
@@ -330,10 +338,10 @@ const Interview = () => {
               text-center
               shadow-2xl
             "
-          >
-            {/* Emoji */}
-            <div
-              className="
+            >
+              {/* Emoji */}
+              <div
+                className="
                 w-20
                 h-20
                 bg-green-500/20
@@ -345,27 +353,89 @@ const Interview = () => {
                 mb-6
                 text-4xl
               "
-            >
-              🎉
+              >
+                🎉
+              </div>
+
+              {/* Title */}
+              <h2 className="text-3xl font-bold mb-4">Interview Completed</h2>
+
+              {/* Description */}
+              <p className="text-zinc-400 leading-7">
+                Congratulations! You have successfully completed your AI
+                interview session.
+              </p>
+
+              {/* Redirect */}
+              <p className="text-zinc-500 text-sm mt-6">
+                Redirecting to feedback page in 5 seconds...
+              </p>
             </div>
-
-            {/* Title */}
-            <h2 className="text-3xl font-bold mb-4">Interview Completed</h2>
-
-            {/* Description */}
-            <p className="text-zinc-400 leading-7">
-              Congratulations! You have successfully completed your AI interview
-              session.
-            </p>
-
-            {/* Redirect */}
-            <p className="text-zinc-500 text-sm mt-6">
-              Redirecting to feedback page in 5 seconds...
-            </p>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Exit Popup */}
+        {showExitPopup && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
+            <div
+              className="
+              w-full
+              max-w-md
+              bg-zinc-900
+              border
+              border-zinc-800
+              rounded-3xl
+              p-8
+              shadow-2xl
+            "
+            >
+              {/* Heading */}
+              <h2 className="text-2xl font-bold mb-3">Terminate Interview?</h2>
+
+              <p className="text-zinc-400 leading-7 mb-8">
+                Your current interview session will be terminated and all
+                ongoing progress may be lost. Do you want to continue?
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-4">
+                {/* Cancel */}
+                <button
+                  onClick={() => setShowExitPopup(false)}
+                  className="
+                  flex-1
+                  bg-zinc-800
+                  hover:bg-zinc-700
+                  transition
+                  py-3
+                  rounded-2xl
+                  font-medium
+                "
+                >
+                  No
+                </button>
+
+                {/* Confirm */}
+                <button
+                  onClick={() => navigate("/")}
+                  className="
+                  flex-1
+                  bg-red-600
+                  hover:bg-red-700
+                  transition
+                  py-3
+                  rounded-2xl
+                  font-medium
+                "
+                >
+                  Yes, Exit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

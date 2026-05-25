@@ -17,7 +17,7 @@ const ProtectedRoute = () => {
 
   // not authenticated
   if (!isLoggedIn) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // authenticated routes

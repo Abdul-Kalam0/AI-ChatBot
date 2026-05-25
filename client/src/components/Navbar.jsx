@@ -38,8 +38,6 @@ const Navbar = () => {
               <p className="text-sm font-semibold text-gray-800">
                 {user?.name || "User"}
               </p>
-
-              {/* <p className="text-xs text-gray-500">{user?.email}</p> */}
             </div>
           </div>
 
@@ -50,7 +48,7 @@ const Navbar = () => {
           >
             <LogOut size={18} />
 
-            <span className="hidden sm:block">Logout</span>
+            <span className="hidden sm:block"></span>
           </button>
         </div>
       </div>
