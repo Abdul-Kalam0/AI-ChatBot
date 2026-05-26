@@ -9,22 +9,77 @@ import { useNavigate } from "react-router-dom";
 const History = () => {
   const [history, setHistory] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const res = await API.get("/interview/history");
-        console.log(res.data.data);
 
         setHistory(res.data.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchHistory();
   }, []);
+
+  // Spinner
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="w-14 h-14 border-4 border-zinc-700 border-t-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Empty History
+  if (history.length === 0) {
+    return (
+      <div
+        className="
+        min-h-screen
+        bg-[#0a0a0a]
+        text-white
+        flex
+        flex-col
+        items-center
+        justify-center
+        text-center
+        px-6
+      "
+      >
+        <h1 className="text-4xl font-bold mb-4">No Interview History</h1>
+
+        <p className="text-zinc-400 text-lg mb-8 max-w-md">
+          Start your first AI-powered mock interview to track your performance
+          and feedback history.
+        </p>
+
+        <button
+          onClick={() => navigate("/start/interview")}
+          className="
+          bg-blue-600
+          hover:bg-blue-700
+          transition-all
+          duration-200
+          px-8
+          py-4
+          rounded-2xl
+          font-semibold
+          text-lg
+        "
+        >
+          Start Interview
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-8">
