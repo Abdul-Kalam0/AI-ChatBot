@@ -5,6 +5,7 @@ import Message from "../models/messageModel.js";
 import { generateAIResponse } from "../services/aiService.js";
 
 import { generateInterviewFeedback } from "../services/feedbackService.js";
+import interviewModel from "../models/interviewModel.js";
 
 // ==========================================
 // START INTERVIEW
@@ -23,6 +24,7 @@ export const startInterview = async (req, res) => {
 
     // create interview
     const interview = await Interview.create({
+      userId: req.user.id,
       techStack,
       difficulty,
     });
@@ -59,11 +61,9 @@ export const startInterview = async (req, res) => {
       techStack,
     });
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Internal server Error",
     });
   }
 };
@@ -202,11 +202,9 @@ export const answerQuestion = async (req, res) => {
       score: interview.score,
     });
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Internal Server Error",
     });
   }
 };
@@ -231,5 +229,40 @@ export const feedbackSummary = async (req, res) => {
       sucess: false,
       data: interview,
     });
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getHistory = async (req, res) => {
+  try {
+    const interviews = await interviewModel
+      .find({
+        userId: req.user.id,
+        completed: true,
+      })
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .select("techStack difficulty score feedback.summary createdAt");
+
+    if (interviews.length === 0) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+        message: "No interview history found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: interviews,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch history",
+    });
+  }
 };

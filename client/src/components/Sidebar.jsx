@@ -1,68 +1,225 @@
-// import React from "react";
-// import { LayoutDashboard, LogOut, UserCircle2 } from "lucide-react";
+import React from "react";
 
-// import { useAuth } from "../context/AuthContext";
-// import { toast } from "react-toastify";
+import {
+  LayoutDashboard,
+  UserCircle2,
+  LogOut,
+  BrainCircuit,
+  History,
+  PlayCircle,
+} from "lucide-react";
 
-// const Sidebar = () => {
-//   const { user, logout } = useAuth();
+import { useAuth } from "../context/AuthContext";
 
-//   const handleLogout = async () => {
-//     try {
-//       await logout();
-//       toast.success("Logout successful");
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || "Failed to logout");
-//     }
-//   };
+import { toast } from "react-toastify";
 
-//   return (
-//     <div className="w-72 min-h-screen bg-[#111111] text-white flex flex-col justify-between border-r border-gray-800">
-//       {/* Top Section */}
-//       <div>
-//         {/* Logo */}
-//         <div className="px-6 py-6 border-b border-gray-800">
-//           <h1 className="text-3xl font-bold">InterviewMock AI</h1>
+import { useLocation, useNavigate } from "react-router-dom";
 
-//           <p className="text-gray-400 text-sm mt-1">
-//             Practice AI-powered mock interviews
-//           </p>
-//         </div>
+const Sidebar = () => {
+  const { user, logout } = useAuth();
 
-//         {/* Navigation */}
-//         <div className="p-4 space-y-3">
-//           <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
-//             <LayoutDashboard size={20} />
+  const navigate = useNavigate();
 
-//             <span className="font-medium">Dashboard</span>
-//           </button>
-//         </div>
-//       </div>
+  const location = useLocation();
 
-//       {/* Bottom Section */}
-//       <div className="p-4 border-t border-gray-800">
-//         {/* Profile */}
-//         <div className="flex items-center gap-3 bg-[#1b1b1b] p-3 rounded-xl mb-4">
-//           <UserCircle2 size={40} className="text-gray-300" />
+  const handleLogout = async () => {
+    try {
+      await logout();
 
-//           <div>
-//             <h3 className="font-semibold">{user?.name || "User"}</h3>
+      toast.success("Logout successful");
 
-//             <p className="text-sm text-gray-400">{user?.email}</p>
-//           </div>
-//         </div>
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to logout");
+    }
+  };
 
-//         {/* Logout */}
-//         <button
-//           onClick={handleLogout}
-//           className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 transition px-4 py-3 rounded-xl font-medium"
-//         >
-//           <LogOut size={18} />
-//           Logout
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
+  const navItems = [
+    {
+      title: "Dashboard",
+      icon: <LayoutDashboard size={22} />,
+      path: "/",
+    },
 
-// export default Sidebar;
+    {
+      title: "Start Interview",
+      icon: <PlayCircle size={22} />,
+      path: "/start/interview",
+    },
+
+    {
+      title: "History",
+      icon: <History size={22} />,
+      path: "/history",
+    },
+  ];
+
+  return (
+    <aside
+      className="
+        w-[290px]
+        h-screen
+        sticky
+        top-0
+        bg-[#09090b]
+        border-r
+        border-zinc-800
+        text-white
+        flex
+        flex-col
+        justify-between
+        px-6
+        py-7
+      "
+    >
+      {/* Top */}
+      <div>
+        {/* Logo */}
+        <div className="mb-12">
+          <div className="flex items-center gap-4">
+            {/* Icon */}
+            <div
+              className="
+                w-14
+                h-14
+                rounded-3xl
+                bg-gradient-to-br
+                from-blue-500
+                to-blue-700
+                flex
+                items-center
+                justify-center
+                shadow-lg
+              "
+            >
+              <BrainCircuit size={28} />
+            </div>
+
+            {/* Text */}
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                InterviewMock
+              </h1>
+
+              <p className="text-zinc-500 text-sm">AI Interview Platform</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="space-y-3">
+          {navItems.map((item) => {
+            const active = location.pathname === item.path;
+
+            return (
+              <button
+                key={item.title}
+                onClick={() => navigate(item.path)}
+                className={`
+                  w-full
+                  flex
+                  items-center
+                  gap-4
+                  px-5
+                  py-4
+                  rounded-2xl
+                  transition-all
+                  duration-200
+                  group
+
+                  ${
+                    active
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "bg-zinc-900 hover:bg-zinc-800 text-zinc-300"
+                  }
+                `}
+              >
+                <div
+                  className={`
+                    transition-all
+                    duration-200
+                    ${
+                      active
+                        ? "text-white"
+                        : "text-zinc-400 group-hover:text-white"
+                    }
+                  `}
+                >
+                  {item.icon}
+                </div>
+
+                <span className="font-medium text-[15px]">{item.title}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Bottom */}
+      <div>
+        {/* User Card */}
+        <div
+          className="
+            bg-zinc-900
+            border
+            border-zinc-800
+            rounded-3xl
+            p-4
+            mb-5
+          "
+        >
+          <div className="flex items-center gap-4">
+            {/* Avatar */}
+            <div
+              className="
+                w-14
+                h-14
+                rounded-2xl
+                bg-zinc-800
+                flex
+                items-center
+                justify-center
+              "
+            >
+              <UserCircle2 size={34} className="text-zinc-400" />
+            </div>
+
+            {/* User Info */}
+            <div className="overflow-hidden">
+              <h2 className="font-semibold text-lg truncate">
+                {user?.name || "User"}
+              </h2>
+
+              <p className="text-zinc-500 text-sm truncate">{user?.email}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="
+            w-full
+            flex
+            items-center
+            justify-center
+            gap-3
+            bg-red-600
+            hover:bg-red-700
+            transition-all
+            duration-200
+            py-4
+            rounded-2xl
+            font-semibold
+            shadow-lg
+          "
+        >
+          <LogOut size={20} />
+          Logout
+        </button>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;

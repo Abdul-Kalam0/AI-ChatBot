@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { Navigate, Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 const ProtectedRoute = () => {
   const { isLoggedIn, loading } = useAuth();
@@ -21,11 +21,17 @@ const ProtectedRoute = () => {
   }
 
   // authenticated routes
+  // authenticated layout
   return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
+    <div className="flex min-h-screen bg-black text-white">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <main className="flex-1 bg-[#0a0a0a] overflow-y-auto">
+        <Outlet />
+      </main>
+    </div>
   );
 };
 

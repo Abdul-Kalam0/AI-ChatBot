@@ -21,6 +21,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/Dashboard.jsx";
+import History from "./pages/History.jsx";
 
 const router = createBrowserRouter([
   // =========================
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/feedback/:interviewId",
         element: <Feedback />,
+      },
+      {
+        path: "/history",
+        element: <History />,
       },
     ],
   },
