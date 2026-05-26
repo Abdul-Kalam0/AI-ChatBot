@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-  LayoutDashboard,
+  Home,
   UserCircle2,
   LogOut,
   BrainCircuit,
@@ -36,8 +36,8 @@ const Sidebar = () => {
 
   const navItems = [
     {
-      title: "Dashboard",
-      icon: <LayoutDashboard size={22} />,
+      title: "Home",
+      icon: <Home size={22} />,
       path: "/",
     },
 
