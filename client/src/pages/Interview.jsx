@@ -142,7 +142,7 @@ const Interview = () => {
                 </div>
               )}
 
-              {/* Back */}
+              {/* Exit */}
               <button
                 onClick={() => setShowExitPopup(true)}
                 className="
@@ -156,7 +156,7 @@ const Interview = () => {
                 rounded-2xl
               "
               >
-                ⬅ Back
+                ❌
               </button>
             </div>
           </div>

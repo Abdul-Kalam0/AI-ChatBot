@@ -59,7 +59,7 @@ const Feedback = () => {
             <p className="text-zinc-400">AI generated performance analysis</p>
           </div>
 
-          <button
+          {/* <button
             onClick={() => navigate("/")}
             className="
               bg-zinc-900
@@ -73,7 +73,7 @@ const Feedback = () => {
             "
           >
             🏠 Home
-          </button>
+          </button> */}
         </div>
 
         {/* Score Card */}

@@ -57,7 +57,7 @@ const App = () => {
             </p>
           </div>
 
-          {/* Back Button */}
+          {/* Back Button
           <button
             onClick={() => navigate(-1)}
             className="
@@ -74,7 +74,7 @@ const App = () => {
             "
           >
             ⬅ Back
-          </button>
+          </button> */}
         </div>
 
         {/* Main Card */}
